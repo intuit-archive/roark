@@ -13,13 +13,27 @@ module Roark
       @template   = args[:template]
       instance.create :parameters => @parameters,
                       :template   => @template
+      instance.wait_for_instance
+      instance.create_ami_from_instance
+      instance.destroy_instance
     end
 
     def destroy
-      instance.destroy
+      true
+    end
+
+    def wait_for_instance
+      while instance.in_progress?
+        sleep 5
+      end
+      instance.success?
     end
 
     private
+
+    def instance_id
+      stack.instance_id
+    end
 
     def instance
       @instance ||= Instance.new :aws_access_key => @aws_access_key,

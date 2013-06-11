@@ -3,19 +3,15 @@ module Roark
     module Ec2
       class CreateAmi
 
-        include Ec2::Shared
-
-        def initialize(args)
-          @aws_access_key = args[:aws_access_key]
-          @aws_secret_key = args[:aws_secret_key]
-          @region         = args[:region]
+        def initialize(connection)
+          @connection = connection
         end
 
         def create(args)
           instance_id = args[:instance_id]
           name        = args[:name]
-          connect.images.create :instance_id => instance_id,
-                                :name        => name
+          @connection.images.create :instance_id => instance_id,
+                                    :name        => name
         end
 
       end

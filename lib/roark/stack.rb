@@ -29,15 +29,15 @@ class Stack
     status =~ /^CREATE_COMPLETE$/
   end
 
-  def status
-    stack_status.status @name
-  end
-
   def instance_id
     outputs.select {|o| o.key == 'InstanceId'}.first.value
   end
 
   private
+
+  def status
+    stack_status.status @name
+  end
 
   def outputs
     stack_outputs.outputs @name
@@ -50,18 +50,18 @@ class Stack
   end
 
   def create_stack
-    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new(connection)
+    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new connection
   end
 
   def destroy_stack
-    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new(connection)
+    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new connection
   end
 
   def stack_outputs
-    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new(connection)
+    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new connection
   end
 
   def stack_status
-    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new(connection)
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new connection 
   end
 end
