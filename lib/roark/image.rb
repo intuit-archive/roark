@@ -16,7 +16,7 @@ module Roark
       @logger.info "Creating instance to image."
       instance.create :parameters => @parameters,
                       :template   => @template
-      @logger.info "Instance #{instance.instance_id} created."
+      @logger.info "Instance created."
 
       wait_for_instance
       stop_instance
@@ -41,7 +41,7 @@ module Roark
 
     def wait_for_instance
       while instance.in_progress? || !instance.exists?
-        @logger.info "Waiting for instance to come online."
+        @logger.info "Waiting for instance to come online.  Currently #{instance.status}."
         sleep 15
       end
 
