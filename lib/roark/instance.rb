@@ -29,7 +29,6 @@ module Roark
     end
 
     def destroy
-      @logger.info "Destroying stack."
       stack.destroy
     end
 
@@ -53,6 +52,10 @@ module Roark
       manage_instance.stop instance_id
     end
 
+    def state
+      instance_status.state instance_id
+    end
+
     private
 
     def stack
@@ -62,18 +65,22 @@ module Roark
                            :region         => @region
     end
 
-    def connection
-      @connection ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                              :aws_secret_key => @aws_secret_key,
-                                                              :region         => @region
+    def ec2
+      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
+                                                       :aws_secret_key => @aws_secret_key,
+                                                       :region         => @region
     end
 
     def create_ami
-      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new connection
+      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new ec2
     end
 
     def manage_instance
-      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new connection
+      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new ec2
+    end
+
+    def instance_status
+      @instance_status ||= Roark::Aws::Ec2::InstanceStatus.new ec2
     end
   end
 end

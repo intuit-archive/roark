@@ -16,11 +16,13 @@ module Roark
       @logger.info "Creating instance."
       instance.create :parameters => @parameters,
                       :template   => @template
+
       wait_for_instance
       stop_instance
+      wait_for_instance_to_stop
       create_ami
       wait_for_ami
-      instance.destroy if instance.exists?
+      instance.destroy
     end
 
     def create_ami
@@ -29,10 +31,17 @@ module Roark
       @logger.info "AMI creation submited."
     end
 
+    def wait_for_instance_to_stop
+      while instance.state != 'stopped'
+        @logger.info "Waiting for instance to stop.  Currently #{instance.state}."
+        sleep 15
+      end
+    end
+
     def wait_for_instance
       while instance.in_progress? || !instance.exists?
         @logger.info "Waiting for instance to come online."
-        sleep 5
+        sleep 15
       end
 
       if instance.success?

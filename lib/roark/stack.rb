@@ -5,15 +5,18 @@ class Stack
     @aws_secret_key = args[:aws_secret_key]
     @name           = args[:name]
     @region         = args[:region]
+    @logger         = Roark.logger
   end
 
   def create(args)
+    @logger.info "Creating stack #{@name}."
     create_stack.create :name       => @name,
                         :parameters => args[:parameters],
                         :template   => args[:template]
   end
 
   def destroy
+    @logger.info "Destroying stack #{@name}."
     destroy_stack.destroy @name
   end
 
@@ -43,25 +46,25 @@ class Stack
     stack_outputs.outputs @name
   end
 
-  def connection
-    @connection ||= Roark::Aws::CloudFormation::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                                       :aws_secret_key => @aws_secret_key,
-                                                                       :region         => @region
+  def cf
+    @cf ||= Roark::Aws::CloudFormation::Connection.new.connect :aws_access_key => @aws_access_key,
+                                                               :aws_secret_key => @aws_secret_key,
+                                                               :region         => @region
   end
 
   def create_stack
-    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new connection
+    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new cf
   end
 
   def destroy_stack
-    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new connection
+    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new cf
   end
 
   def stack_outputs
-    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new connection
+    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new cf
   end
 
   def stack_status
-    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new connection 
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new cf 
   end
 end
