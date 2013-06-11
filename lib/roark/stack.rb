@@ -38,24 +38,24 @@ class Stack
   end
 
   def connection
-    @connection ||= CloudFormation::Connection.new(:aws_access_key => @aws_access_key,
-                                                   :aws_secret_key => @aws_secret_key,
-                                                   :region         => @region
+    @connection ||= Roark::Aws::CloudFormation::Connection.new.connect :aws_access_key => @aws_access_key,
+                                                                       :aws_secret_key => @aws_secret_key,
+                                                                       :region         => @region
   end
 
   def create_stack
-    @create_stack ||= CloudFormation::CreateStack.new(connection)
+    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new(connection)
   end
 
   def destroy_stack
-    @destroy_stack ||= CloudFormation::DestroyStack.new(connection)
+    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new(connection)
   end
 
   def stack_outputs
-    @stack_outputs ||= CloudFormation::StackOutputs.new(connection)
+    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new(connection)
   end
 
   def stack_status
-    @stack_status ||= CloudFormation::StackStatus.new(connection)
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new(connection)
   end
 end

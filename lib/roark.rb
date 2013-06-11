@@ -1,5 +1,7 @@
 require "roark/aws"
-require "roark/builder"
+require "roark/bakery"
+require "roark/image"
+require "roark/stack"
 require "roark/version"
 
 module Roark

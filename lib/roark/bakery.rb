@@ -9,14 +9,12 @@ module Roark
     end
 
     def bake(args)
-      @source_name = args[:source_ami]
-      @template    = args[:template]
       @stack       = Stack.new :aws_access_key => @aws_access_key,
                                :aws_secret_key => @aws_secret_key,
                                :name           => @name,
                                :region         => @region
 
-      create_stack
+      create_stack(args)
       destroy_stack
     end
 
@@ -26,7 +24,7 @@ module Roark
     end
 
     def create_stack(args)
-      template => args[:template]
+      template = args[:template]
       @stack.create :template => template
       wait_for_stack_to_complete
     end

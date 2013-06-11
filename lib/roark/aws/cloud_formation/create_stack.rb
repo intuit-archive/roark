@@ -17,10 +17,10 @@ module Roark
 
         private
 
-        def format_parameters(parameters)
+        def format_parameters(parameters={})
           parameters.map do |p|
-            { :parameter_key   => p,
-              :parameter_value => p }
+            { :parameter_key   => p.first,
+              :parameter_value => p.last }
           end
         end
 
