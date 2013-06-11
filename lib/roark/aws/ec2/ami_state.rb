@@ -2,21 +2,18 @@ module Roark
   module Aws
     module Ec2
       class AmiState
+
+        include Ec2::Shared
+
         def initialize(args)
-          @image = args[:image]
+          @aws_access_key = args[:aws_access_key]
+          @aws_secret_key = args[:aws_secret_key]
+          @region         = args[:region]
         end
 
         def state(ami)
-          ec2.images[ami].state
+          connect.images[ami].state
         end
-
-        private
-
-        def ec2
-          @ec2 ||= EC2::Connect.new(:account => @image.account,
-                                    :region  => @image.region.name).connect
-        end
-
       end
     end
   end

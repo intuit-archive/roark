@@ -2,19 +2,14 @@ module Roark
   module Aws
     module CloudFormation
       class StackOutputs
-        def initialize(stack)
-          @stack = stack
+
+        def initialize(connection)
+          @connection = connection
         end
 
-        def outputs
-          connect.stacks[@stack.name].outputs
-        end
-
-        private
-
-        def connect
-          @connect ||= CloudFormation::Connect.new(:account => @stack.account,
-                                                   :region  => @stack.region.name).connect
+        def outputs(args)
+          name = args[:name]
+          @connection.stacks[name].outputs
         end
 
       end

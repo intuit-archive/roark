@@ -2,19 +2,14 @@ module Roark
   module Aws
     module CloudFormation
       class DestroyStack
-        def initialize(stack)
-          @stack = stack
+
+        def initialize(connection)
+          @connection = connection
         end
 
-        def destroy
-          connect.stacks[@stack.name].delete
-        end
-
-        private
-
-        def connect
-          @connect ||= CloudFormation::Connect.new(:account => @stack.account,
-                                                   :region  => @stack.region.name).connect
+        def destroy(args)
+          name = args[:name]
+          @connection.stacks[name].delete
         end
 
       end
