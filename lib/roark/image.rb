@@ -41,7 +41,7 @@ module Roark
 
     def wait_for_instance
       while instance.in_progress? || !instance.exists?
-        @logger.info "Waiting for instance to come online.  Currently #{instance.status}."
+        @logger.info "Waiting for instance to come online."
         sleep 15
       end
 
@@ -64,7 +64,7 @@ module Roark
     end
 
     def wait_for_ami
-      while pending?
+      while image_id && pending?
         @logger.info "Waiting for AMI creation to complete."
         sleep 15
       end
