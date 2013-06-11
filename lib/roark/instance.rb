@@ -6,6 +6,7 @@ module Roark
       @aws_secret_key = args[:aws_secret_key]
       @name           = args[:name]
       @region         = args[:region]
+      @logger         = Roark.logger
     end
 
     def create(args)
@@ -22,11 +23,13 @@ module Roark
     end
 
     def create_ami_from_instance
+      @logger.info "Creating AMI '#{@name}' from Instance '#{instance_id}'."
       create_ami.create :name        => @name,
                         :instance_id => instance_id
     end
 
     def destroy
+      @logger.info "Destroying stack."
       stack.destroy
     end
 

@@ -6,26 +6,30 @@ module Roark
       @aws_secret_key = args[:aws_secret_key]
       @name           = args[:name]
       @region         = args[:region]
+      @logger         = Roark.logger
     end
 
     def create(args)
       @parameters = args[:parameters]
       @template   = args[:template]
 
+      @logger.info "Creating instance."
       instance.create :parameters => @parameters,
                       :template   => @template
-
       wait_for_instance
-
-      instance.create_ami_from_instance
-
+      create_ami
       wait_for_ami
-
       instance.destroy if instance.exists?
+    end
+
+    def create_ami
+      @logger.info "Creating AMI."
+      instance.create_ami_from_instance
     end
 
     def wait_for_instance
       while instance.in_progress? || !instance.exists?
+        @logger.info "Waiting for instance to come online."
         sleep 5
       end
       instance.success?
@@ -37,6 +41,7 @@ module Roark
 
     def wait_for_ami
       while pending?
+        @logger.info "Waiting for AMI creation to complete."
         sleep 5
       end
       available?
