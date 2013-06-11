@@ -17,6 +17,7 @@ module Roark
       instance.create :parameters => @parameters,
                       :template   => @template
       wait_for_instance
+      stop_instance
       create_ami
       wait_for_ami
       instance.destroy if instance.exists?
@@ -25,6 +26,7 @@ module Roark
     def create_ami
       @logger.info "Creating AMI."
       instance.create_ami_from_instance
+      @logger.info "AMI creation submited."
     end
 
     def wait_for_instance
@@ -32,7 +34,19 @@ module Roark
         @logger.info "Waiting for instance to come online."
         sleep 5
       end
-      instance.success?
+
+      if instance.success?
+        @logger.info "Instance completed succesfully."
+        true
+      else
+        @logger.info "Instance did not complete succesfully."
+        false
+      end
+    end
+
+    def stop_instance
+      @logger.info "Stopping instance."
+      instance.stop
     end
 
     def image_id
@@ -44,7 +58,14 @@ module Roark
         @logger.info "Waiting for AMI creation to complete."
         sleep 5
       end
-      available?
+
+      if available?
+        @logger.info "AMI completed succesfully."
+        true
+      else
+        @logger.info "AMI did not complete succesfully."
+        false
+      end
     end
 
     private

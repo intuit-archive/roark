@@ -49,6 +49,10 @@ module Roark
       stack.exists?
     end
 
+    def stop
+      manage_instance.stop instance_id
+    end
+
     private
 
     def stack
@@ -66,6 +70,10 @@ module Roark
 
     def create_ami
       @create_ami ||= Roark::Aws::Ec2::CreateAmi.new connection
+    end
+
+    def manage_instance
+      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new connection
     end
   end
 end
