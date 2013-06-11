@@ -74,6 +74,8 @@ module Roark
     end
 
     def wait_for_ami
+      p image_id
+      p pending
       while !image_id || pending?
         @logger.info "Waiting for AMI creation to complete."
         sleep 15
