@@ -33,7 +33,8 @@ class Stack
   end
 
   def instance_id
-    outputs.select {|o| o.key == 'InstanceId'}.first.value
+    id = outputs.select {|o| o.key == 'InstanceId'}.first
+    id ? id.value : "unknown"
   end
 
   private

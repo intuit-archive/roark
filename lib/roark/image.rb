@@ -13,9 +13,10 @@ module Roark
       @parameters = args[:parameters]
       @template   = args[:template]
 
-      @logger.info "Creating instance."
+      @logger.info "Creating instance to image."
       instance.create :parameters => @parameters,
                       :template   => @template
+      @logger.info "Instance #{instance.instance_id} created."
 
       wait_for_instance
       stop_instance
@@ -32,8 +33,8 @@ module Roark
     end
 
     def wait_for_instance_to_stop
-      while instance.state != 'stopped'
-        @logger.info "Waiting for instance to stop.  Currently #{instance.state}."
+      while instance.status != :stopped
+        @logger.info "Waiting for instance #{instance.instance_id} to stop.  Currently #{instance.status}."
         sleep 15
       end
     end
@@ -45,7 +46,7 @@ module Roark
       end
 
       if instance.success?
-        @logger.info "Instance completed succesfully."
+        @logger.info "Instance #{instance.instance_id} completed succesfully."
         true
       else
         @logger.info "Instance did not complete succesfully."
@@ -59,13 +60,13 @@ module Roark
     end
 
     def image_id
-      @image_id ||= Roark::Aws::Ec2::FindAmi.new(connection).find @name
+      Roark::Aws::Ec2::FindAmi.new(connection).find @name
     end
 
     def wait_for_ami
       while pending?
         @logger.info "Waiting for AMI creation to complete."
-        sleep 5
+        sleep 15
       end
 
       if available?
@@ -79,14 +80,6 @@ module Roark
 
     private
 
-    def available?
-      ami_state == :avaiable
-    end
-
-    def pending?
-      ami_state == :pending
-    end
-
     def ami_state
       ec2_ami_state.state image_id
     end
@@ -97,10 +90,6 @@ module Roark
 
     def pending?
       ami_state == :pending
-    end
-
-    def instance_id
-      stack.instance_id
     end
 
     def connection
