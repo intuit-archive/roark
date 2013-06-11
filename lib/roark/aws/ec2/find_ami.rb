@@ -1,12 +1,12 @@
 module Roark
   module Aws
     module Ec2
-      class AmiState
+      class FindAmi
         def initialize(connection)
           @connection = connection
         end
 
-        def state(name)
+        def find(name)
           @connection.images.select { |i| i.name == name }.first
         end
       end

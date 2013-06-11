@@ -12,21 +12,18 @@ module Roark
       parameters = args[:parameters]
       template   = args[:template]
 
-      stack.create :name       => @name,
-                   :parameters => parameters,
-                   :template   => template
+      unless exists?
+        stack.create :name       => @name,
+                     :parameters => parameters,
+                     :template   => template
+      end
+
+      stack.success? ? instance_id : false
     end
 
     def create_ami_from_instance
       create_ami.create :name        => @name,
                         :instance_id => instance_id
-    end
-
-    def wait_for_instance
-      while instance.in_progress?
-        sleep 5
-      end
-      instance.success?
     end
 
     def destroy
@@ -45,6 +42,10 @@ module Roark
       stack.instance_id
     end
 
+    def exists?
+      stack.exists?
+    end
+
     private
 
     def stack
@@ -58,14 +59,6 @@ module Roark
       @connection ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
                                                               :aws_secret_key => @aws_secret_key,
                                                               :region         => @region
-    end
-
-    def ec2_ami_state
-      @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new connection
-    end
-
-    def ec2_destroy_ami
-      @ec2_destroy_ami ||= Roark::Aws::Ec2::DestroyAmi.new connection
     end
 
     def create_ami

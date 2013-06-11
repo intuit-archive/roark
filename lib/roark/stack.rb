@@ -18,7 +18,7 @@ class Stack
   end
 
   def exists?
-    status.exists?
+    stack_status.exists? @name
   end
 
   def in_progress?
