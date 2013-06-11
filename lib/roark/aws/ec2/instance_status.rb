@@ -6,8 +6,8 @@ module Roark
           @connection = connection
         end
 
-        def state(id)
-          @connection.instances[id].state
+        def status(id)
+          @connection.instances[id].status
         end
       end
     end

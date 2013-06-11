@@ -52,8 +52,8 @@ module Roark
       manage_instance.stop instance_id
     end
 
-    def state
-      instance_status.state instance_id
+    def status
+      instance_status.status instance_id
     end
 
     private
