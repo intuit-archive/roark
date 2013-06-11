@@ -1,7 +1,7 @@
 require 'workflow'
 
 module Roark
-  class Bakery
+  class Builder
 
     attr_accessor :ami, :instance, :name, :reigon, :source_ami, :workflow_state
 
