@@ -7,13 +7,11 @@ module Roark
           @connection = connection
         end
 
-        def status(args)
-          name = args[:name]
+        def status(name)
           @connection.stacks[name].status
         end
 
-        def exists?(args)
-          name = args[:name]
+        def exists?(name)
           @connection.stacks[name].exists?
         end
 

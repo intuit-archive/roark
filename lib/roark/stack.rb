@@ -8,33 +8,39 @@ class Stack
   end
 
   def create(args)
-    create_stack.create args
+    create_stack.create :name       => @name,
+                        :parameters => args[:parameters],
+                        :template   => args[:template]
   end
 
   def destroy
-    destroy_stack.destroy
+    destroy_stack.destroy @name
   end
 
   def exists?
-    stack_status.exists?
+    status.exists?
   end
 
-  private
+  def in_progress?
+    status =~ /^CREATE_IN_PROGRESS$/
+  end
+
+  def success?
+    status =~ /^CREATE_COMPLETE$/
+  end
+
+  def status
+    stack_status.status @name
+  end
 
   def instance_id
     outputs.select {|o| o.key == 'InstanceId'}.first.value
   end
 
+  private
+
   def outputs
-    stack_outputs.outputs
-  end
-
-  def in_progress?
-    stack_status =~ /^CREATE_IN_PROGRESS$/
-  end
-
-  def success?
-    stack_status =~ /^CREATE_COMPLETE$/
+    stack_outputs.outputs @name
   end
 
   def connection

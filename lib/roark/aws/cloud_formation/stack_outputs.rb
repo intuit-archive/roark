@@ -7,8 +7,7 @@ module Roark
           @connection = connection
         end
 
-        def outputs(args)
-          name = args[:name]
+        def outputs(name)
           @connection.stacks[name].outputs
         end
 

@@ -8,15 +8,24 @@ module Roark
       @region         = args[:region]
     end
 
-    def bake(args)
-      @source_ami = args[:source_ami]
+    def create(args)
+      @parameters = args[:parameters]
       @template   = args[:template]
-      bakery = Bakery.new :aws_access_key => @aws_access_key,
-                          :aws_secret_key => @aws_secret_key,
-                          :name           => @name,
-                          :region         => @region
-      bakery.bake :source_ami => @source_ami,
-                  :template   => @template
+      instance.create :parameters => @parameters,
+                      :template   => @template
+    end
+
+    def destroy
+      instance.destroy
+    end
+
+    private
+
+    def instance
+      @instance ||= Instance.new :aws_access_key => @aws_access_key,
+                                 :aws_secret_key => @aws_secret_key,
+                                 :name           => @name,
+                                 :region         => @region
     end
 
   end
