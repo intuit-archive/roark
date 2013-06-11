@@ -26,8 +26,22 @@ module Roark
       instance.destroy
     end
 
+    def image_id
+      Roark::Aws::Ec2::FindAmi.new(connection).find @name
+    end
+
+    def state
+      ec2_ami_state.state image_id
+    end
+
+    def destroy
+      ec2_destroy_ami.destroy image_id
+    end
+
+    private
+
     def create_ami
-      @logger.info "Creating AMI."
+      @logger.info "Imaging instance."
       instance.create_ami_from_instance
       @logger.info "AMI creation submited."
     end
@@ -59,10 +73,6 @@ module Roark
       instance.stop
     end
 
-    def image_id
-      Roark::Aws::Ec2::FindAmi.new(connection).find @name
-    end
-
     def wait_for_ami
       while image_id && pending?
         @logger.info "Waiting for AMI creation to complete."
@@ -78,18 +88,12 @@ module Roark
       end
     end
 
-    private
-
-    def ami_state
-      ec2_ami_state.state image_id
-    end
-
     def available?
-      ami_state == :avaiable
+      state == :avaiable
     end
 
     def pending?
-      ami_state == :pending
+      state == :pending
     end
 
     def connection
