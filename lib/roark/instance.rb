@@ -13,11 +13,14 @@ module Roark
       parameters = args[:parameters]
       template   = args[:template]
 
-      unless exists?
-        stack.create :name       => @name,
-                     :parameters => parameters,
-                     :template   => template
+      if exists?
+        @logger.error "Stack '#{@name}' already exists."
+        return false
       end
+
+      stack.create :name       => @name,
+                   :parameters => parameters,
+                   :template   => template
 
       stack.success? ? instance_id : false
     end
