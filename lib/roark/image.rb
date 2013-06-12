@@ -37,18 +37,18 @@ module Roark
 
     private
 
-    def create_ami
-      @logger.info "Creating AMI '#{@name}' from Instance '#{instance.instance_id}'."
-      image = instance.create_ami_from_instance
-      @image_id = image.image_id
-      @logger.info "Image #{@image_id} created."
-    end
-
     def create_instance
       @logger.info "Creating instance."
       instance.create :parameters => @parameters,
                       :template   => @template
       @logger.info "Instance created."
+    end
+
+    def create_ami
+      @logger.info "Creating AMI '#{@name}' from Instance '#{instance.instance_id}'."
+      image = instance.create_ami_from_instance
+      @image_id = image.image_id
+      @logger.info "Image #{@image_id} created."
     end
 
     def destroy_instance
