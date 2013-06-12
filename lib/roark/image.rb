@@ -15,7 +15,7 @@ module Roark
       @parameters = args[:parameters]
       @template   = args[:template]
 
-      @logger.info "Creating instance to image."
+      @logger.info "Creating instance."
       instance.create :parameters => @parameters,
                       :template   => @template
       @logger.info "Instance created."
