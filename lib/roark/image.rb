@@ -38,6 +38,7 @@ module Roark
     end
 
     def destroy
+      @logger.info "Destroy image #{@image_id}."
       ec2_destroy_ami.destroy @image_id
     end
 
