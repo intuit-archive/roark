@@ -38,7 +38,7 @@ module Roark
     private
 
     def create_instance
-      @logger.info "Creating instance."
+      @logger.info "Creating instance in '#{@region}'."
       instance.create :parameters => @parameters,
                       :template   => @template
       @logger.info "Instance created."

@@ -9,7 +9,7 @@ class Stack
   end
 
   def create(args)
-    @logger.info "Creating Cloud Formation stack '#{@name}'."
+    @logger.info "Creating Cloud Formation stack '#{@name}' in '#{@region}'."
     create_stack.create :name       => @name,
                         :parameters => args[:parameters],
                         :template   => args[:template]
