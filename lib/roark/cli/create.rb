@@ -2,6 +2,8 @@ module Roark
   module CLI
     class Create
 
+      include Shared
+
       def initialize
         @options = {}
       end
@@ -9,7 +11,7 @@ module Roark
       def create
         option_parser.parse!
 
-        validate_required_options
+        validate_required_options [:name, :parameters, :region, :template, :aws_access_key, :aws_secret_key]
 
         template   = File.read @options[:template]
 
@@ -20,14 +22,6 @@ module Roark
 
         image.create :template   => template,
                      :parameters => parse_parameters(@options[:parameters])
-      end
-
-      def validate_required_options
-        [:name, :parameters, :region, :template, :aws_access_key, :aws_secret_key].each do |o|
-          unless @options[o]
-            raise OptionParser::MissingArgument.new "Option '#{o.to_s}' required."
-          end
-        end
       end
 
       def option_parser
@@ -74,13 +68,6 @@ module Roark
         'Creates a images'
       end
 
-      def command_name
-        self.class.name.split('::').last.downcase
-      end
-
-      def help
-        puts option_parser.help
-      end
     end
   end
 end

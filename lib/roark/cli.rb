@@ -1,5 +1,7 @@
 require 'optparse'
 
+require 'roark/cli/shared'
+
 require 'roark/cli/create'
 require 'roark/cli/destroy'
 
@@ -52,7 +54,7 @@ module Roark
 
     def self.commands
       return @commands if @commands
-      klasses   = Roark::CLI.constants
+      klasses   = Roark::CLI.constants.reject {|c| [:Shared].include? c}
       @commands = klasses.map { |klass| Roark::CLI.const_get(klass).new }
     end
 

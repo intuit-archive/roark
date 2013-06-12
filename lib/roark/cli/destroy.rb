@@ -2,6 +2,8 @@ module Roark
   module CLI
     class Destroy
 
+      include Shared
+
       def initialize
         @options = {}
       end
@@ -9,21 +11,13 @@ module Roark
       def destroy
         option_parser.parse!
 
-        validate_required_options
+        validate_required_options [:image_id, :region, :aws_access_key, :aws_secret_key]
 
         image = Roark::Image.new :aws_access_key => @options[:aws_access_key],
                                  :aws_secret_key => @options[:aws_secret_key],
                                  :region         => @options[:region]
         image.image_id = @options[:image_id]
         image.destroy
-      end
-
-      def validate_required_options
-        [:image_id, :region, :aws_access_key, :aws_secret_key].each do |o|
-          unless @options[o]
-            raise OptionParser::MissingArgument.new "Option '#{o.to_s}' required."
-          end
-        end
       end
 
       def option_parser
@@ -52,13 +46,6 @@ module Roark
         'Destroys a images'
       end
 
-      def command_name
-        self.class.name.split('::').last.downcase
-      end
-
-      def help
-        puts option_parser.help
-      end
     end
   end
 end
