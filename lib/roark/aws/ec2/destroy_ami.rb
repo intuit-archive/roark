@@ -5,6 +5,7 @@ module Roark
 
         def initialize(connection)
           @connection = connection
+          @logger     = Roark.logger
         end
 
         def destroy(ami)
@@ -14,10 +15,15 @@ module Roark
 
           block_device_mappings = image.block_device_mappings
 
-          image.delete if image.state == :available
+          if image.state == :available
+            @logger.info "Deleting image #{ami}."
+            image.delete
+          end
 
           block_device_mappings.each_value do |v|
-            @connection.snapshots[v[:snapshot_id]].delete
+            snapshot_id = v[:snapshot_id]
+            @logger.info "Deleting snapshot #{snapshot_id}."
+            @connection.snapshots[snapshot_id].delete
           end
         end
 

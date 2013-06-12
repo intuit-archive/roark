@@ -9,12 +9,14 @@ class Stack
   end
 
   def create(args)
+    @logger.info "Creating Cloud Formation stack #{@name}."
     create_stack.create :name       => @name,
                         :parameters => args[:parameters],
                         :template   => args[:template]
   end
 
   def destroy
+    @logger.info "Destroying Cloud Formation stack #{@name}."
     destroy_stack.destroy @name
   end
 
