@@ -76,7 +76,6 @@ module Roark
     end
 
     def wait_for_ami
-      @logger.info "Current state: #{state}."
       while pending?
         @logger.info "Waiting for AMI creation to complete.  Currently #{state}."
         sleep 15
@@ -92,7 +91,7 @@ module Roark
     end
 
     def available?
-      state == :avaiable
+      state == :available
     end
 
     def pending?

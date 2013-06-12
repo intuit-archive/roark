@@ -6,8 +6,8 @@ module Roark
           @connection = connection
         end
 
-        def state(name)
-          @connection.images.select { |i| i.name == name }.first
+        def state(image_id)
+          @connection.images[image_id].state
         end
       end
     end
