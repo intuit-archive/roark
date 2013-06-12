@@ -11,8 +11,6 @@ module Roark
 
         validate_required_options
 
-        template   = File.read @options[:template]
-
         image = Roark::Image.new :aws_access_key => @options[:aws_access_key],
                                  :aws_secret_key => @options[:aws_secret_key],
                                  :region         => @options[:region]
@@ -21,7 +19,7 @@ module Roark
       end
 
       def validate_required_options
-        [:image_id, :region, :aws_access_key, :aws_secret_key]  do |o|
+        [:image_id, :region, :aws_access_key, :aws_secret_key].each do |o|
           unless @options[o]
             raise OptionParser::MissingArgument.new "Option '#{o.to_s}' required."
           end

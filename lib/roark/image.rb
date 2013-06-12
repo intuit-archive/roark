@@ -30,8 +30,9 @@ module Roark
     end
 
     def destroy
-      @logger.info "Destroy image #{@image_id}."
+      @logger.info "Destroying image '#{@image_id}'."
       ec2_destroy_ami.destroy @image_id
+      @logger.info "Destroy completed succesfully."
     end
 
     private
@@ -57,7 +58,7 @@ module Roark
 
     def wait_for_instance_to_stop
       while instance.status != :stopped
-        @logger.info "Waiting for instance #{instance.instance_id} to stop. Current state: #{instance.status}."
+        @logger.info "Waiting for instance '#{instance.instance_id}' to stop. Current state: '#{instance.status}'."
         sleep 15
       end
     end
@@ -69,7 +70,7 @@ module Roark
       end
 
       if instance.success?
-        @logger.info "Instance #{instance.instance_id} completed succesfully."
+        @logger.info "Instance '#{instance.instance_id}' completed succesfully."
         true
       else
         @logger.info "Instance did not complete succesfully."
@@ -84,7 +85,7 @@ module Roark
 
     def wait_for_ami
       while pending?
-        @logger.info "Waiting for AMI creation to complete. Current state: #{state}."
+        @logger.info "Waiting for AMI creation to complete. Current state: '#{state}'."
         sleep 15
       end
 
