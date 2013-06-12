@@ -1,12 +1,12 @@
 module Roark
   module CLI
-    class Create
+    class Destroy
 
       def initialize
         @options = {}
       end
 
-      def create
+      def destroy
         option_parser.parse!
 
         validate_required_options
@@ -15,15 +15,13 @@ module Roark
 
         image = Roark::Image.new :aws_access_key => @options[:aws_access_key],
                                  :aws_secret_key => @options[:aws_secret_key],
-                                 :name           => @options[:name],
                                  :region         => @options[:region]
-
-        image.create :template   => template,
-                     :parameters => parse_parameters(@options[:parameters])
+        image.image_id = @options[:image_id]
+        image.destroy
       end
 
       def validate_required_options
-        [:name, :parameters, :region, :template, :aws_access_key, :aws_secret_key].each do |o|
+        [:image_id, :region, :aws_access_key, :aws_secret_key]  do |o|
           unless @options[o]
             raise OptionParser::MissingArgument.new "Option '#{o.to_s}' required."
           end
@@ -32,22 +30,14 @@ module Roark
 
       def option_parser
         OptionParser.new do |opts|
-          opts.banner = "Usage: roark create [options]"
+          opts.banner = "Usage: roark destroy [options]"
 
-          opts.on("-n", "--name [NAME]", "Name of image") do |o|
-            @options[:name] = o
-          end
-
-          opts.on("-p", "--parameters [PARAMETERS]", "CSV of parameters and values separated by '=' to pass to Cloud Fomration") do |o|
-            @options[:parameters] = o
+          opts.on("-i", "--image-id [IMAGE_ID]", "ID of Image to destroy") do |o|
+            @options[:image_id] = o
           end
 
           opts.on("-r", "--region [REGION]", "Region to build image") do |o|
             @options[:region] = o
-          end
-
-          opts.on("-t", "--template [TEMPLATE]", "Path to Cloud Formation template") do |o|
-            @options[:template] = o
           end
 
           opts.on("--aws-access-key [KEY]", "AWS Access Key") do |o|
@@ -60,18 +50,8 @@ module Roark
         end
       end
 
-      def parse_parameters(parameters)
-        p = {}
-        parameters.split(',').each do |attribs|
-          key   = attribs.split('=').first.gsub(/\s+/, "")
-          value = attribs.gsub(/^.+?=/, '')
-          p[key] = value
-        end
-        p
-      end
-
       def command_summary
-        'Creates a images'
+        'Destroys a images'
       end
 
       def command_name

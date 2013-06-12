@@ -1,6 +1,7 @@
 require 'optparse'
 
 require 'roark/cli/create'
+require 'roark/cli/destroy'
 
 module Roark
   module CLI
@@ -10,7 +11,19 @@ module Roark
 
       case cmd
       when 'create'
-        CLI::Create.new.create
+        begin
+          CLI::Create.new.create
+        rescue OptionParser::MissingArgument => e
+          puts e.message
+          exit 1
+        end
+      when 'destroy'
+        begin
+          CLI::Destroy.new.destroy
+        rescue OptionParser::MissingArgument => e
+          puts e.message
+          exit 1
+        end
       when '-h'
         usage
       when '-v'
