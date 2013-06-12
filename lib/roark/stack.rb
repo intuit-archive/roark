@@ -66,6 +66,6 @@ class Stack
   end
 
   def stack_status
-    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new cf 
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new cf
   end
 end
