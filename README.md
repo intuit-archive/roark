@@ -20,7 +20,9 @@ Or install it yourself as:
 
 ### CLI
 
-Set your AWS Access and Secret Keys for the target account:
+Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region.  This stack needs to provide the ID of the instance to be imaged (IE. i-1234abcd) as the output **InstanceId**.
+
+Once you have a working templated, set your AWS Access and Secret Keys for the target account:
 
     export AWS_ACCESS_KEY=xxx
     export AWS_SECRET_KEY=yyy
