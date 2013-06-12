@@ -18,9 +18,11 @@ Or install it yourself as:
 
 ## Usage
 
-### CLI
+Roark builds AMIs from and Instance provided by a Cloud Formation Stack.
 
 Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region.  This stack needs to provide the ID of the instance to be imaged (IE. i-1234abcd) as the output **InstanceId**.
+
+### CLI
 
 Once you have a working templated, set your AWS Access and Secret Keys for the target account:
 
