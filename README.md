@@ -36,7 +36,10 @@ Create Image
 
 Destroy Image
 
-    roark destroy -i IMAGE_ID
+    roark destroy -i IMAGE_ID \
+                  -r AWS_REGION \
+                  --aws-access-key $AWS_ACCESS_KEY \
+                  --aws-secret-key $AWS_SECRET_KEY
 
 ## Contributing
 
