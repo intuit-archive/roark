@@ -24,6 +24,7 @@ module Roark
       stop_instance
       wait_for_instance_to_stop
       @image_id = create_ami.image_id
+      @logger.info "Image #{@image_id} created."
       wait_for_ami
       instance.destroy
     end
@@ -75,8 +76,9 @@ module Roark
     end
 
     def wait_for_ami
+      @logger.info "Current state: #{state}."
       while pending?
-        @logger.info "Waiting for AMI creation to complete."
+        @logger.info "Waiting for AMI creation to complete.  Currently #{state}."
         sleep 15
       end
 
