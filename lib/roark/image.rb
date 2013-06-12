@@ -27,10 +27,7 @@ module Roark
       @logger.info "Image #{@image_id} created."
       wait_for_ami
       instance.destroy
-    end
-
-    def image_id
-      Roark::Aws::Ec2::FindAmi.new(connection).find @name
+      @logger.info "Image created succesfully."
     end
 
     def state
@@ -51,7 +48,7 @@ module Roark
 
     def wait_for_instance_to_stop
       while instance.status != :stopped
-        @logger.info "Waiting for instance #{instance.instance_id} to stop.  Currently #{instance.status}."
+        @logger.info "Waiting for instance #{instance.instance_id} to stop. Current state: #{instance.status}."
         sleep 15
       end
     end
@@ -78,7 +75,7 @@ module Roark
 
     def wait_for_ami
       while pending?
-        @logger.info "Waiting for AMI creation to complete.  Currently #{state}."
+        @logger.info "Waiting for AMI creation to complete. Current state: #{state}."
         sleep 15
       end
 
