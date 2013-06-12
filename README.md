@@ -1,6 +1,6 @@
 # Roark
 
-TODO: Write a gem description
+Howard Roark, master architect and builder of images.
 
 ## Installation
 
@@ -18,7 +18,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### CLI
+
+Set your AWS Access and Secret Keys for the target account:
+
+    export AWS_ACCESS_KEY=xxx
+    export AWS_SECRET_KEY=yyy
+
+Create Image
+
+    roark create -n NAME_OF_IMAGE
+                 -r AWS_REGION \
+                 -t PATH_TO_CLOUD_FORMATION_TEMPLATE \
+                 -p 'Parameter1=value1,Parameter2=value2' \
+                 --aws-access-key $AWS_ACCESS_KEY \
+                 --aws-secret-key $AWS_SECRET_KEY
+
+Destroy Image
+
+    roark destroy -i IMAGE_ID
 
 ## Contributing
 
