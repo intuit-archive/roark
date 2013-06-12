@@ -1,6 +1,8 @@
 module Roark
   class Image
 
+    attr_accessor :image_id
+
     def initialize(args)
       @aws_access_key = args[:aws_access_key]
       @aws_secret_key = args[:aws_secret_key]
@@ -21,7 +23,7 @@ module Roark
       wait_for_instance
       stop_instance
       wait_for_instance_to_stop
-      create_ami
+      @image_id = create_ami.image_id
       wait_for_ami
       instance.destroy
     end
@@ -31,11 +33,11 @@ module Roark
     end
 
     def state
-      ec2_ami_state.state image_id
+      ec2_ami_state.state @image_id
     end
 
     def destroy
-      ec2_destroy_ami.destroy image_id
+      ec2_destroy_ami.destroy @image_id
     end
 
     private
@@ -43,7 +45,6 @@ module Roark
     def create_ami
       @logger.info "Imaging instance."
       instance.create_ami_from_instance
-      @logger.info "AMI creation submited."
     end
 
     def wait_for_instance_to_stop
@@ -74,9 +75,7 @@ module Roark
     end
 
     def wait_for_ami
-      p image_id
-      p pending
-      while !image_id || pending?
+      while pending?
         @logger.info "Waiting for AMI creation to complete."
         sleep 15
       end
