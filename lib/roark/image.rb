@@ -48,7 +48,7 @@ module Roark
       @logger.info "Creating AMI '#{@name}' from Instance '#{instance.instance_id}'."
       image = instance.create_ami_from_instance
       @image_id = image.image_id
-      @logger.info "Image #{@image_id} created."
+      @logger.info "Image '#{@image_id}' created."
     end
 
     def destroy_instance

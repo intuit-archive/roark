@@ -16,13 +16,13 @@ module Roark
           block_device_mappings = image.block_device_mappings
 
           if image.state == :available
-            @logger.info "Deleting image #{ami}."
+            @logger.info "Deleting image '#{ami}'."
             image.delete
           end
 
           block_device_mappings.each_value do |v|
             snapshot_id = v[:snapshot_id]
-            @logger.info "Deleting snapshot #{snapshot_id}."
+            @logger.info "Deleting snapshot '#{snapshot_id}'."
             @connection.snapshots[snapshot_id].delete
           end
         end
