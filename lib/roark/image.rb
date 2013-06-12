@@ -15,18 +15,13 @@ module Roark
       @parameters = args[:parameters]
       @template   = args[:template]
 
-      @logger.info "Creating instance."
-      instance.create :parameters => @parameters,
-                      :template   => @template
-      @logger.info "Instance created."
-
+      create_instance
       wait_for_instance
       stop_instance
       wait_for_instance_to_stop
-      @image_id = create_ami.image_id
-      @logger.info "Image #{@image_id} created."
+      create_ami
       wait_for_ami
-      instance.destroy
+      destroy_instance
       @logger.info "Image created succesfully."
     end
 
@@ -42,8 +37,22 @@ module Roark
     private
 
     def create_ami
-      @logger.info "Imaging instance."
-      instance.create_ami_from_instance
+      @logger.info "Creating AMI '#{@name}' from Instance '#{instance.instance_id}'."
+      image = instance.create_ami_from_instance
+      @image_id = image.image_id
+      @logger.info "Image #{@image_id} created."
+    end
+
+    def create_instance
+      @logger.info "Creating instance."
+      instance.create :parameters => @parameters,
+                      :template   => @template
+      @logger.info "Instance created."
+    end
+
+    def destroy_instance
+      instance.destroy
+      @logger.info "Instance destroyed."
     end
 
     def wait_for_instance_to_stop
@@ -96,10 +105,10 @@ module Roark
       state == :pending
     end
 
-    def connection
-      @connection ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                              :aws_secret_key => @aws_secret_key,
-                                                              :region         => @region
+    def ec2
+      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
+                                                       :aws_secret_key => @aws_secret_key,
+                                                       :region         => @region
     end
 
     def instance
@@ -110,11 +119,11 @@ module Roark
     end
 
     def ec2_ami_state
-      @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new connection
+      @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new ec2
     end
 
     def ec2_destroy_ami
-      @ec2_destroy_ami ||= Roark::Aws::Ec2::DestroyAmi.new connection
+      @ec2_destroy_ami ||= Roark::Aws::Ec2::DestroyAmi.new ec2
     end
 
   end

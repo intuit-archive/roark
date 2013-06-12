@@ -9,14 +9,12 @@ class Stack
   end
 
   def create(args)
-    @logger.info "Creating stack #{@name}."
     create_stack.create :name       => @name,
                         :parameters => args[:parameters],
                         :template   => args[:template]
   end
 
   def destroy
-    @logger.info "Destroying stack #{@name}."
     destroy_stack.destroy @name
   end
 
