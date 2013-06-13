@@ -16,9 +16,9 @@ module Roark
       @parameters = args[:parameters]
       @template   = args[:template]
 
-      return false unless create_instance
+      create_instance
       wait_for_instance
-      return false unless stop_instance
+      stop_instance
       wait_for_instance_to_stop
       create_ami
       wait_for_ami
