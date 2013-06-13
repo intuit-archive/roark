@@ -4,11 +4,9 @@ module Roark
     attr_accessor :image_id
 
     def initialize(args)
-      @aws_access_key = args[:aws_access_key]
-      @aws_secret_key = args[:aws_secret_key]
-      @name           = args[:name]
-      @region         = args[:region]
-      @logger         = Roark.logger
+      @aws    = args[:aws]
+      @name   = args[:name]
+      @logger = Roark.logger
     end
 
     def create(args)
@@ -25,17 +23,17 @@ module Roark
       @logger.info "Image created succesfully."
     end
 
+    def available?
+      state == :available
+    end
+
+    def pending?
+      state == :pending
+    end
+
     def state
       ec2_ami_state.state @image_id
     end
-
-    def destroy
-      @logger.info "Destroying image '#{@image_id}'."
-      ec2_destroy_ami.destroy @image_id
-      @logger.info "Destroy completed succesfully."
-    end
-
-    private
 
     def create_instance
       @logger.info "Creating instance in '#{@region}'."
@@ -98,25 +96,21 @@ module Roark
       end
     end
 
-    def available?
-      state == :available
+    def destroy
+      @logger.info "Destroying image '#{@image_id}'."
+      ec2_destroy_ami.destroy @image_id
+      @logger.info "Destroy completed succesfully."
     end
 
-    def pending?
-      state == :pending
-    end
+    private
+
 
     def ec2
-      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                       :aws_secret_key => @aws_secret_key,
-                                                       :region         => @region
+      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect aws
     end
 
     def instance
-      @instance ||= Instance.new :aws_access_key => @aws_access_key,
-                                 :aws_secret_key => @aws_secret_key,
-                                 :name           => @name,
-                                 :region         => @region
+      @instance ||= Instance.new :aws => aws, :name => @name
     end
 
     def ec2_ami_state

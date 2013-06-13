@@ -2,11 +2,9 @@ module Roark
   class Instance
 
     def initialize(args)
-      @aws_access_key = args[:aws_access_key]
-      @aws_secret_key = args[:aws_secret_key]
-      @name           = args[:name]
-      @region         = args[:region]
-      @logger         = Roark.logger
+      @aws    = args[:aws]
+      @name   = args[:name]
+      @logger = Roark.logger
     end
 
     def create(args)
@@ -61,16 +59,12 @@ module Roark
     private
 
     def stack
-      @stack ||= Stack.new :aws_access_key => @aws_access_key,
-                           :aws_secret_key => @aws_secret_key,
-                           :name           => @name,
-                           :region         => @region
+      @stack ||= Stack.new :aws  => @aws,
+                           :name => @name,
     end
 
     def ec2
-      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                       :aws_secret_key => @aws_secret_key,
-                                                       :region         => @region
+      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect @aws
     end
 
     def create_ami

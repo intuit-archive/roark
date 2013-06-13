@@ -1,0 +1,135 @@
+{
+  "Description": "Source Image Instance Template.",
+
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Parameters" : {
+    "SourceAMI" : {
+      "Description" : "Source AMI to provision.",
+      "Type" : "String"
+    }
+  },
+
+  "Mappings" : {
+    "S3Map": {
+      "us-east-1": { "s3": "s3:/",
+                     "http": "http://s3.amazonaws.com",
+                     "https": "https://s3.amazonaws.com",
+                     "endpoint": "s3.amazonaws.com"
+      },
+      "us-west-1": { "s3": "s3:/",
+                     "http": "http://s3-us-west-1.amazonaws.com",
+                     "https": "https://s3-us-west-1.amazonaws.com",
+                     "endpoint": "s3-us-west-1.amazonaws.com"
+
+      },
+      "us-west-2": { "s3": "s3:/",
+                     "http": "http://s3-us-west-2.amazonaws.com",
+                     "https": "https://s3-us-west-2.amazonaws.com",
+                     "endpoint": "s3-us-west-2.amazonaws.com"
+      }
+    }
+  },
+
+  "Resources" : {
+
+    "RootRole": {
+       "Type": "AWS::IAM::Role",
+       "Properties": {
+          "AssumeRolePolicyDocument": {
+             "Statement": [ {
+                "Effect": "Allow",
+                "Principal": {
+                   "Service": [ "ec2.amazonaws.com" ]
+                },
+                "Action": [ "sts:AssumeRole" ]
+             } ]
+          },
+          "Path": "/"
+       }
+    },
+
+    "RolePolicies": {
+       "Type": "AWS::IAM::Policy",
+       "Properties": {
+          "PolicyName": "root",
+          "PolicyDocument": {
+            "Statement":[
+              {
+                "Effect": "Allow",
+                "Action": "*",
+                "Resource": "*"
+              }
+            ]
+          },
+          "Roles": [ { "Ref": "RootRole" } ]
+       }
+    },
+
+    "RootInstanceProfile": {
+       "Type": "AWS::IAM::InstanceProfile",
+       "Properties": {
+          "Path": "/",
+          "Roles": [ { "Ref": "RootRole" } ]
+       }
+    },
+
+    "Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Source Image Instance for Building AMIs",
+        "region": { "Ref": "AWS::Region" },
+        "stack_name": { "Ref": "AWS::StackName" }
+      },
+      "Properties" : {
+        "ImageId" : { "Ref" : "SourceAMI" },
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "SecurityGroupIds" : [{ "Ref" : "InstanceSecurityGroup" }],
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackName"} } ],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+
+          "export HISTSIZE=0", "\n",
+
+          "cat > /etc/yum.repos.d/intu-packages-", { "Ref": "AWS::Region" }, ".repo << EOS\n",
+          "[intu-packages-", { "Ref": "AWS::Region" }, "]\n",
+          "name=Intuit Custom RPM Packages\n",
+          "baseurl=",
+            { "Fn::FindInMap": [ "S3Map", { "Ref": "AWS::Region" }, "http" ] },
+            "/intu-packages-", { "Ref": "AWS::Region" }, "/rhel/6/x86_64\n",
+          "gpgcheck=0\n",
+          "enabled=1\n",
+          "EOS\n",
+
+          "yum install -y heirloom", "\n",
+
+          "mkdir /tmp/build", "\n",
+          "heirloom download -n parallax-dev -i 1.0.0 -o /tmp/build -b bweaver-test-123 -r us-west-1 --use-iam-profile -x", "\n",
+
+          "runuser -c '/tmp/build/configure.sh' root", "\n",
+
+          "echo Done!", "\n"
+        ]]}}
+      }
+    },
+
+    "InstanceSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable SSH access via port 22",
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" }
+         ]
+      }
+    }
+  },
+
+  "Outputs" : {
+    "InstanceId" : {
+      "Value" : { "Ref" : "Instance" },
+      "Description" : "Instance ID of your brand new Instance"
+    }
+  }
+}

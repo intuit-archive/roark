@@ -1,11 +1,9 @@
 class Stack
 
   def initialize(args)
-    @aws_access_key = args[:aws_access_key]
-    @aws_secret_key = args[:aws_secret_key]
-    @name           = args[:name]
-    @region         = args[:region]
-    @logger         = Roark.logger
+    @aws    = args[:aws]
+    @region = args[:region]
+    @logger = Roark.logger
   end
 
   def create(args)
@@ -48,9 +46,7 @@ class Stack
   end
 
   def cf
-    @cf ||= Roark::Aws::CloudFormation::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                               :aws_secret_key => @aws_secret_key,
-                                                               :region         => @region
+    @cf ||= Roark::Aws::CloudFormation::Connection.new.connect aws
   end
 
   def create_stack
