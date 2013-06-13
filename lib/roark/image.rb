@@ -12,18 +12,6 @@ module Roark
       @logger   = Roark.logger
     end
 
-    def create(args)
-      create_instance :parameters => args[:parameters],
-                      :template   => args[:template]
-      wait_for_instance
-      stop_instance
-      wait_for_instance_to_stop
-      create_ami
-      wait_for_ami
-      destroy_instance
-      @logger.info "Image created succesfully."
-    end
-
     def available?
       state == :available
     end

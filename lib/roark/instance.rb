@@ -11,16 +11,9 @@ module Roark
       parameters = args[:parameters]
       template   = args[:template]
 
-      if exists?
-        @logger.error "Stack '#{@name}' already exists."
-        return false
-      end
-
       stack.create :name       => @name,
                    :parameters => parameters,
                    :template   => template
-
-      stack.success? ? instance_id : false
     end
 
     def create_ami_from_instance

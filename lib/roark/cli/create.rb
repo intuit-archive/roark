@@ -13,12 +13,14 @@ module Roark
 
         validate_required_options [:name, :region, :template]
 
-        template   = File.read @options[:template]
+        template = File.read @options[:template]
 
-        image = Roark::Image.new :aws  => aws, :name => @options[:name]
+        image = Roark::Image.new :aws => aws, :name => @options[:name]
 
-        image.create :template   => template,
-                     :parameters => parse_parameters(@options[:parameters])
+        image_create_workflow = Roark::ImageCreateWorkflow.new image
+
+        image_create_workflow.execute :template   => template,
+                                      :parameters => parse_parameters
       end
 
       def option_parser
@@ -51,10 +53,10 @@ module Roark
         end
       end
 
-      def parse_parameters(parameters)
+      def parse_parameters
         p = {}
-        return p unless parameters
-        parameters.split(',').each do |attribs|
+        return p unless @options[:parameters]
+        @options[:parameters].split(',').each do |attribs|
           key   = attribs.split('=').first.gsub(/\s+/, "")
           value = attribs.gsub(/^.+?=/, '')
           p[key] = value
