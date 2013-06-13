@@ -13,7 +13,7 @@ describe Roark::Image do
     @image = Roark::Image.new init_args
   end
 
-  context "testing instance" do
+  context "testing instance methods" do
     before do
       @instance_mock = mock 'instance mock'
       Roark::Instance.should_receive(:new).
@@ -94,7 +94,7 @@ describe Roark::Image do
     end
   end
 
-  context "testing state" do
+  context "testing state methods" do
     before do
       @ec2_ami_state_mock = mock 'ec2 ami state'
       Roark::Aws::Ec2::AmiState.should_receive(:new).
@@ -146,19 +146,19 @@ describe Roark::Image do
         expect(@image.wait_for_ami).to be_false
       end
     end
-
-
   end
 
-  describe "#destroy" do
-    it "should call destroy on Ec2::DestroyAmi" do
-      @image.image_id = 'ami-12345678'
-      ec2_destroy_ami_mock = mock 'aws_destroy_ami'
-      Roark::Aws::Ec2::DestroyAmi.should_receive(:new).
-                                  with(@aws_mock).
-                                  and_return ec2_destroy_ami_mock
-      ec2_destroy_ami_mock.should_receive(:destroy).with('ami-12345678')
-      @image.destroy
+  context "testing image methods" do
+    describe "#destroy" do
+      it "should call destroy on Ec2::DestroyAmi" do
+        @image.image_id = 'ami-12345678'
+        ec2_destroy_ami_mock = mock 'aws_destroy_ami'
+        Roark::Aws::Ec2::DestroyAmi.should_receive(:new).
+                                    with(@aws_mock).
+                                    and_return ec2_destroy_ami_mock
+        ec2_destroy_ami_mock.should_receive(:destroy).with('ami-12345678')
+        @image.destroy
+      end
     end
   end
 
