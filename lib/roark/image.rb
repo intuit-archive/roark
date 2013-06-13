@@ -13,10 +13,8 @@ module Roark
     end
 
     def create(args)
-      @parameters = args[:parameters]
-      @template   = args[:template]
-
-      create_instance
+      create_instance :parameters => args[:parameters],
+                      :template   => args[:template]
       wait_for_instance
       stop_instance
       wait_for_instance_to_stop
@@ -38,15 +36,15 @@ module Roark
       ec2_ami_state.state @image_id
     end
 
-    def create_instance
+    def create_instance(args)
       @logger.info "Creating instance in '#{@region}'."
-      instance.create :parameters => @parameters,
-                      :template   => @template
+      instance.create :parameters => args[:parameters],
+                      :template   => args[:template]
       @logger.info "Instance created."
     end
 
     def create_ami
-      @logger.info "Creating AMI '#{@name}' from Instance '#{instance.instance_id}'."
+      @logger.info "Creating AMI '#{@name}' from Instance '#{instance_id}'."
       image = instance.create_ami_from_instance
       @image_id = image.image_id
       @logger.info "Image '#{@image_id}' created."
@@ -59,7 +57,7 @@ module Roark
 
     def wait_for_instance_to_stop
       while instance.status != :stopped
-        @logger.info "Waiting for instance '#{instance.instance_id}' to stop. Current state: '#{instance.status}'."
+        @logger.info "Waiting for instance '#{instance_id}' to stop. Current state: '#{instance.status}'."
         sleep 15
       end
     end
@@ -71,7 +69,7 @@ module Roark
       end
 
       if instance.success?
-        @logger.info "Instance '#{instance.instance_id}' completed succesfully."
+        @logger.info "Instance '#{instance_id}' completed succesfully."
         true
       else
         @logger.info "Instance did not complete succesfully."
@@ -103,6 +101,10 @@ module Roark
       @logger.info "Destroying image '#{@image_id}'."
       ec2_destroy_ami.destroy @image_id
       @logger.info "Destroy completed succesfully."
+    end
+
+    def instance_id
+      instance.instance_id
     end
 
     private
