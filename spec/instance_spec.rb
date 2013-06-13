@@ -9,12 +9,6 @@ describe Roark::Instance do
                                     :name => 'test-image'
   end
 
-  describe "#create" do
-    it "should call create stack" do
-      pending
-    end
-  end
-
   %w(destroy exists? in_progress? instance_id success).each do |method|
     describe "##{method}" do
       it "should call stack #{method}" do
