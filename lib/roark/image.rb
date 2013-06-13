@@ -1,13 +1,15 @@
 module Roark
   class Image
 
-    attr_accessor :image_id
+    attr_accessor :aws, :image_id, :name
 
     def initialize(args)
-      @aws    = args[:aws]
-      @name   = args[:name]
-      @region = @aws.region
-      @logger = Roark.logger
+      @aws      = args[:aws]
+      @image_id = args[:image_id]
+      @name     = args[:name]
+
+      @region   = @aws.region
+      @logger   = Roark.logger
     end
 
     def create(args)

@@ -16,6 +16,12 @@ module Roark
       def help
         puts option_parser.help
       end
+
+      def aws
+        Roark::Aws::Connection.new :access_key_id  => @options[:access_key_id],
+                                   :aws_secret_key => @options[:secret_access_key],
+                                   :region         => @options[:region]
+      end
     end
   end
 end

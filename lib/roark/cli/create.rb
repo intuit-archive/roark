@@ -15,12 +15,7 @@ module Roark
 
         template   = File.read @options[:template]
 
-        aws = Roark::Aws::Connection.new :access_key_id  => @options[:access_key_id],
-                                         :aws_secret_key => @options[:secret_access_key],
-                                         :region         => @options[:region]
-
-        image = Roark::Image.new :aws  => aws,
-                                 :name => @options[:name]
+        image = Roark::Image.new :aws  => aws, :name => @options[:name]
 
         image.create :template   => template,
                      :parameters => parse_parameters(@options[:parameters])
