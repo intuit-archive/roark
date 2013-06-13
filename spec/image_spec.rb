@@ -1,29 +1,53 @@
 require 'spec_helper'
 
 describe Roark::Image do
-  let(:init_args) { { :aws_access_key => 'access',
-                      :aws_secret_key => 'secret',
-                      :name           => 'test-image',
-                      :region         => 'us-west-1' } }
+  before do
+    @aws_mock = mock "aws connection mock"
+    @aws_mock.stub :region => 'us-west-1'
+    init_args = { :aws    => @aws_mock,
+                  :region => 'us-west-1' }
+    @image = Roark::Image.new init_args
+  end
 
-  let(:ec2) { mock "ec2 connection" }
-
-  subject { Roark::Image.new init_args }
-
-  describe "#available?" do
-    connection_mock = mock "connection mock"
-    Roark::Aws::Ec2::Connection.stub :new => connection_mock
-    connection_mock.should_receive(:connect).with(init_args)
-
-    Roark::Aws::Ec2::AmiState.should_receive(:new).with ec2
-
-    it "should return true if the image is int state available" do
-      expect(subject.available?).to be_true
+  context "test state" do
+    before do
+      @ec2_ami_state_mock = mock 'ec2 ami state'
+      Roark::Aws::Ec2::AmiState.should_receive(:new).
+                                with(@aws_mock).
+                                and_return @ec2_ami_state_mock
     end
 
-    it "should return false if the image is not in state available" do
-      expect(subject.available?).to be_true
+    describe "#available?" do
+      it "should return true if the image is in state available" do
+        @ec2_ami_state_mock.stub :state => :available
+        expect(@image.available?).to be_true
+      end
+
+      it "should return false if the image is not in state available" do
+        @ec2_ami_state_mock.stub :state => :pending
+        expect(@image.available?).to be_false
+      end
     end
+
+    describe "#pending?" do
+      it "should return true if the image is in state pending" do
+        @ec2_ami_state_mock.stub :state => :pending
+        expect(@image.pending?).to be_true
+      end
+
+      it "should return false if the image is not in state pending" do
+        @ec2_ami_state_mock.stub :state => :stopped
+        expect(@image.pending?).to be_false
+      end
+    end
+
+    describe "#state" do
+      it "should call Ec2::AmiState for image state" do
+        @ec2_ami_state_mock.stub :state => :available
+        expect(@image.state).to eq(:available)
+      end
+    end
+
   end
 
 end
