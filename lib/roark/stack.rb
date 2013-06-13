@@ -2,7 +2,8 @@ class Stack
 
   def initialize(args)
     @aws    = args[:aws]
-    @region = args[:region]
+    @name   = args[:name]
+    @region = @aws.region
     @logger = Roark.logger
   end
 

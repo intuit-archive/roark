@@ -49,7 +49,7 @@ module Roark
     end
 
     def stop
-      manage_instance.stop instance_id
+      stop_instance.stop instance_id
     end
 
     def status
@@ -59,15 +59,15 @@ module Roark
     private
 
     def stack
-      @stack ||= Stack.new :aws  => @aws,
-                           :name => @name
+      @stack ||= Stack.new :aws  => @aws, :name => @name
     end
+
     def create_ami
       @create_ami ||= Roark::Aws::Ec2::CreateAmi.new @aws
     end
 
-    def manage_instance
-      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new @aws
+    def stop_instance
+      @stop_instance ||= Roark::Aws::Ec2::StopInstance.new @aws
     end
 
     def instance_status

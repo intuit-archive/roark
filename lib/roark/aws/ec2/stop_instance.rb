@@ -1,7 +1,7 @@
 module Roark
   module Aws
     module Ec2
-      class ManageInstance
+      class StopInstance
         def initialize(connection)
           @connection = connection
         end

@@ -11,7 +11,7 @@ module Roark
       def create
         option_parser.parse!
 
-        validate_required_options [:name, :parameters, :region, :template, :aws_access_key, :aws_secret_key]
+        validate_required_options [:name, :region, :template]
 
         template   = File.read @options[:template]
 
@@ -58,6 +58,7 @@ module Roark
 
       def parse_parameters(parameters)
         p = {}
+        return p unless parameters
         parameters.split(',').each do |attribs|
           key   = attribs.split('=').first.gsub(/\s+/, "")
           value = attribs.gsub(/^.+?=/, '')
