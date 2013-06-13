@@ -60,23 +60,18 @@ module Roark
 
     def stack
       @stack ||= Stack.new :aws  => @aws,
-                           :name => @name,
+                           :name => @name
     end
-
-    def ec2
-      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect @aws
-    end
-
     def create_ami
-      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new ec2
+      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new @aws
     end
 
     def manage_instance
-      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new ec2
+      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new @aws
     end
 
     def instance_status
-      @instance_status ||= Roark::Aws::Ec2::InstanceStatus.new ec2
+      @instance_status ||= Roark::Aws::Ec2::InstanceStatus.new @aws
     end
   end
 end

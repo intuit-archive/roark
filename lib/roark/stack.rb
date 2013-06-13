@@ -45,23 +45,19 @@ class Stack
     stack_outputs.outputs @name
   end
 
-  def cf
-    @cf ||= Roark::Aws::CloudFormation::Connection.new.connect aws
-  end
-
   def create_stack
-    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new cf
+    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new @aws
   end
 
   def destroy_stack
-    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new cf
+    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new @aws
   end
 
   def stack_outputs
-    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new cf
+    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new @aws
   end
 
   def stack_status
-    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new cf
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new @aws
   end
 end

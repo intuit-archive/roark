@@ -10,8 +10,8 @@ module Roark
         def create(args)
           instance_id = args[:instance_id]
           name        = args[:name]
-          @connection.images.create :instance_id => instance_id,
-                                    :name        => name
+          @connection.ec2.images.create :instance_id => instance_id,
+                                        :name        => name
         end
 
       end

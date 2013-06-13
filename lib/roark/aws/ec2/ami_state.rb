@@ -7,7 +7,7 @@ module Roark
         end
 
         def state(image_id)
-          @connection.images[image_id].state
+          @connection.ec2.images[image_id].state
         end
       end
     end

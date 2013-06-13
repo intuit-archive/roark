@@ -6,6 +6,7 @@ module Roark
     def initialize(args)
       @aws    = args[:aws]
       @name   = args[:name]
+      @region = @aws.region
       @logger = Roark.logger
     end
 
@@ -104,21 +105,16 @@ module Roark
 
     private
 
-
-    def ec2
-      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect aws
-    end
-
     def instance
-      @instance ||= Instance.new :aws => aws, :name => @name
+      @instance ||= Instance.new :aws => @aws, :name => @name
     end
 
     def ec2_ami_state
-      @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new ec2
+      @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new @aws
     end
 
     def ec2_destroy_ami
-      @ec2_destroy_ami ||= Roark::Aws::Ec2::DestroyAmi.new ec2
+      @ec2_destroy_ami ||= Roark::Aws::Ec2::DestroyAmi.new @aws
     end
 
   end

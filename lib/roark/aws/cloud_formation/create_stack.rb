@@ -11,8 +11,8 @@ module Roark
           name       = args[:name]
           parameters = args[:parameters]
           template   = args[:template]
-          @connection.stacks.create name, template, { :capabilities => capabilities,
-                                                      :parameters   => format_parameters(parameters) }
+          @connection.cf.stacks.create name, template, { :capabilities => capabilities,
+                                                         :parameters   => format_parameters(parameters) }
         end
 
         private

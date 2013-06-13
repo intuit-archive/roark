@@ -8,7 +8,7 @@ module Roark
         end
 
         def outputs(name)
-          @connection.stacks[name].outputs
+          @connection.cf.stacks[name].outputs
         end
 
       end

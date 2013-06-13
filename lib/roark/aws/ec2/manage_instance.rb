@@ -7,7 +7,7 @@ module Roark
         end
 
         def stop(id)
-          @connection.instances[id].stop
+          @connection.ec2.instances[id].stop
         end
       end
     end
