@@ -10,6 +10,6 @@ module Roark
   module_function
 
   def logger(logger=nil)
-    @@logger ||= logger ? logger : Logger.new(STDOUT)
+    @logger ||= logger ? logger : Logger.new(STDOUT)
   end
 end

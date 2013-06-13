@@ -50,16 +50,14 @@ module Roark
       @logger.info "Image '#{@image_id}' created."
     end
 
+    def stop_instance
+      @logger.info "Stopping instance."
+      instance.stop
+    end
+
     def destroy_instance
       instance.destroy
       @logger.info "Instance destroyed."
-    end
-
-    def wait_for_instance_to_stop
-      while instance.status != :stopped
-        @logger.info "Waiting for instance '#{instance_id}' to stop. Current state: '#{instance.status}'."
-        sleep 15
-      end
     end
 
     def wait_for_instance
@@ -77,9 +75,11 @@ module Roark
       end
     end
 
-    def stop_instance
-      @logger.info "Stopping instance."
-      instance.stop
+    def wait_for_instance_to_stop
+      while instance.status != :stopped
+        @logger.info "Waiting for instance '#{instance_id}' to stop. Current state: '#{instance.status}'."
+        sleep 15
+      end
     end
 
     def wait_for_ami
