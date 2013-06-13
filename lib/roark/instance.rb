@@ -1,6 +1,10 @@
 module Roark
   class Instance
 
+    extend Forwardable
+
+    def_delegators :stack, :destroy, :exists?, :in_progress?, :instance_id, :success
+
     def initialize(args)
       @aws    = args[:aws]
       @name   = args[:name]
@@ -19,26 +23,6 @@ module Roark
     def create_ami_from_instance
       create_ami.create :name        => @name,
                         :instance_id => instance_id
-    end
-
-    def destroy
-      stack.destroy
-    end
-
-    def in_progress?
-      stack.in_progress?
-    end
-
-    def success?
-      stack.success?
-    end
-
-    def instance_id
-      stack.instance_id
-    end
-
-    def exists?
-      stack.exists?
     end
 
     def stop
