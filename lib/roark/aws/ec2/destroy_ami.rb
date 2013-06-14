@@ -28,9 +28,6 @@ module Roark
           end
         end
 
-        def exists?(ami)
-          @connection.ec2.images[ami].exists?
-        end
       end
     end
   end

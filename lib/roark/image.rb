@@ -71,7 +71,7 @@ module Roark
     def wait_for_instance
       while instance.in_progress? || !instance.exists?
         @logger.info "Waiting for instance to come online."
-        sleep 15
+        sleep 60
       end
 
       if instance.success?

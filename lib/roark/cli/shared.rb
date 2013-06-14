@@ -4,7 +4,8 @@ module Roark
       def validate_required_options(options)
         options.each do |o|
           unless @options[o]
-            raise OptionParser::MissingArgument.new "Option '#{o.to_s}' required."
+            @logger.error "Option '#{o.to_s}' required."
+            exit 1
           end
         end
       end

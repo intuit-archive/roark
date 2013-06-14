@@ -6,12 +6,18 @@ module Roark
 
       def initialize
         @options = {}
+        @logger  = Roark.logger
       end
 
       def create
         option_parser.parse!
 
         validate_required_options [:name, :region, :template]
+
+        unless File.exists? @options[:template]
+          @logger.error "Template #{@options[:template]} does not exist."
+          exit 1
+        end
 
         template = File.read @options[:template]
 
@@ -23,7 +29,7 @@ module Roark
         begin
           image_create_workflow.execute
         rescue Roark::Exceptions::ImageCreateWorkflowError => e
-          Roark.logger.error e.message
+          @logger.error e.message
           exit 1
         end
       end

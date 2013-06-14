@@ -94,7 +94,7 @@ describe Roark::Image do
       it "should sleep until the instance is not in state in_progress" do
         @instance_mock.stub(:in_progress?).and_return(true, false)
         @instance_mock.stub :exists? => true
-        @image.should_receive(:sleep).with(15)
+        @image.should_receive(:sleep).with(60)
         @instance_mock.stub :success? => true
         expect(@image.wait_for_instance).to be_true
       end
@@ -104,7 +104,7 @@ describe Roark::Image do
       it "should sleep until the instance exists" do
         @instance_mock.stub :in_progress? => false
         @instance_mock.stub(:exists?).and_return(false, true)
-        @image.should_receive(:sleep).with(15)
+        @image.should_receive(:sleep).with(60)
         @instance_mock.stub :success? => true
         expect(@image.wait_for_instance).to be_true
       end
