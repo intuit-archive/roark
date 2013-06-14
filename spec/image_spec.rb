@@ -86,7 +86,7 @@ describe Roark::Image do
       it "should sleep until instance is stopped" do
         @instance_mock.stub(:status).and_return(:available, :stopped)
         @image.should_receive(:sleep).with(15)
-        @image.wait_for_instance_to_stop
+        expect(@image.wait_for_instance_to_stop.success?).to be_true
       end
     end
 
@@ -96,7 +96,7 @@ describe Roark::Image do
         @instance_mock.stub :exists? => true
         @image.should_receive(:sleep).with(60)
         @instance_mock.stub :success? => true
-        expect(@image.wait_for_instance).to be_true
+        expect(@image.wait_for_instance.success?).to be_true
       end
     end
 
@@ -106,7 +106,7 @@ describe Roark::Image do
         @instance_mock.stub(:exists?).and_return(false, true)
         @image.should_receive(:sleep).with(60)
         @instance_mock.stub :success? => true
-        expect(@image.wait_for_instance).to be_true
+        expect(@image.wait_for_instance.success?).to be_true
       end
     end
 
@@ -115,7 +115,7 @@ describe Roark::Image do
         @instance_mock.stub :in_progress? => false
         @instance_mock.stub :exists? => true
         @instance_mock.stub :success? => false
-        expect(@image.wait_for_instance).to be_false
+        expect(@image.wait_for_instance.success?).to be_false
       end
     end
 
@@ -183,19 +183,19 @@ describe Roark::Image do
         @ec2_ami_state_mock.stub(:state).and_return(:pending, :available)
         @ec2_ami_state_mock.stub :exists? => true
         @image.should_receive(:sleep).with(15)
-        expect(@image.wait_for_ami).to be_true
+        expect(@image.wait_for_ami.success?).to be_true
       end
 
       it "should wait for the ami if it does not yet exists" do
         @ec2_ami_state_mock.stub(:exists?).and_return(false, true)
         @ec2_ami_state_mock.stub :state => :available
         @image.should_receive(:sleep).with(15)
-        expect(@image.wait_for_ami).to be_true
+        expect(@image.wait_for_ami.success?).to be_true
       end
 
       it "should return false if the ami is not in state available" do
         @ec2_ami_state_mock.stub :state => :failed, :exists? => true
-        expect(@image.wait_for_ami).to be_false
+        expect(@image.wait_for_ami.success?).to be_false
       end
     end
   end

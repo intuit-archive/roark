@@ -75,11 +75,13 @@ module Roark
       end
 
       if instance.success?
-        @logger.info "Instance '#{instance_id}' completed succesfully."
-        true
+        msg = "Instance '#{instance_id}' completed succesfully."
+        @logger.info msg
+        Response.new :code => 0, :message => msg
       else
-        @logger.info "Instance did not complete succesfully."
-        false
+        msg = "Instance did not complete succesfully."
+        @logger.info msg
+        Response.new :code => 1, :message => msg
       end
     end
 
@@ -88,6 +90,7 @@ module Roark
         @logger.info "Waiting for instance '#{instance_id}' to stop. Current state: '#{instance.status}'."
         sleep 15
       end
+      Response.new :code => 0, :message => "Instance stopped."
     end
 
     def wait_for_ami
@@ -97,11 +100,13 @@ module Roark
       end
 
       if available?
-        @logger.info "AMI completed succesfully."
-        true
+        msg = "AMI completed succesfully."
+        @logger.info msg
+        Response.new :code => 0, :message => msg
       else
-        @logger.info "AMI did not complete succesfully."
-        false
+        msg = "AMI did not complete succesfully."
+        @logger.info msg
+        Response.new :code => 1, :message => msg
       end
     end
 

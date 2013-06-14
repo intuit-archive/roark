@@ -76,7 +76,7 @@ module Roark
       end
 
       def command_summary
-        'Creates a images'
+        'Creates an image'
       end
 
     end

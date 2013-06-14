@@ -45,7 +45,7 @@ module Roark
       end
 
       def command_summary
-        'Destroys a images'
+        'Destroys an image'
       end
 
     end

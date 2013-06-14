@@ -1,0 +1,60 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "AWS CloudFormation Sample Template to create instance and output ID for transforming to an image by Roark.",
+
+  "Parameters" : {
+    "KeyName" : {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the web server",
+      "Type" : "String"
+    }
+  },
+
+  "Mappings" : {
+    "AWSRegionArch2AMI" : {
+      "us-east-1"      : { "PV64" : "ami-1624987f" },
+      "us-west-2"      : { "PV64" : "ami-2a31bf1a" },
+      "us-west-1"      : { "PV64" : "ami-1bf9de5e" },
+      "eu-west-1"      : { "PV64" : "ami-c37474b7" },
+      "ap-southeast-1" : { "PV64" : "ami-a6a7e7f4" },
+      "ap-southeast-2" : { "PV64" : "ami-bd990e87" },
+      "ap-northeast-1" : { "PV64" : "ami-4e6cd34f" },
+      "sa-east-1"      : { "PV64" : "ami-1e08d103" }
+    }
+  },
+
+  "Resources" : {
+    "Instance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" }, "PV64" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : "m1.large",
+        "SecurityGroups" : [{ "Ref" : "Ec2SecurityGroup" }],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          "echo 'Hello World' > /hello_world.txt", "\n"
+        ]]}}
+      }
+    },
+
+    "Ec2SecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "HTTP and SSH access",
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : "22", "ToPort" : "22",
+          "CidrIp" : "0.0.0.0/0"
+        } ]
+      }
+    }
+  },
+
+  "Outputs" : {
+    "InstanceId" : {
+      "Value" : { "Ref" : "Instance" },
+      "Description" : "ID of Instance"
+    }
+  }
+}
