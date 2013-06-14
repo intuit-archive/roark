@@ -20,7 +20,9 @@ Or install it yourself as:
 
 Roark builds AMIs from and Instance provided by a Cloud Formation Stack.
 
-Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region.  This stack needs to provide the ID of the instance to be imaged (IE. i-1234abcd) as the output **InstanceId**.
+Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region. This template should create and instance that is fully configured at bootstrap (via **userdata**, **Cloud Init**).
+
+The stack must provide the ID of the instance to be imaged (IE. i-1234abcd) as the output **InstanceId**.
 
 ### CLI
 
@@ -40,6 +42,10 @@ Create Image
 Destroy Image
 
     roark destroy -i IMAGE_ID -r AWS_REGION
+
+## Example
+
+To build an
 
 ## Contributing
 
