@@ -34,16 +34,11 @@ Create Image
     roark create -n NAME_OF_IMAGE
                  -r AWS_REGION \
                  -t PATH_TO_CLOUD_FORMATION_TEMPLATE \
-                 -p 'Parameter1=value1,Parameter2=value2' \
-                 --aws-access-key $AWS_ACCESS_KEY \
-                 --aws-secret-key $AWS_SECRET_KEY
+                 -p 'Parameter1=value1,Parameter2=value2'
 
 Destroy Image
 
-    roark destroy -i IMAGE_ID \
-                  -r AWS_REGION \
-                  --aws-access-key $AWS_ACCESS_KEY \
-                  --aws-secret-key $AWS_SECRET_KEY
+    roark destroy -i IMAGE_ID -r AWS_REGION
 
 ## Contributing
 
