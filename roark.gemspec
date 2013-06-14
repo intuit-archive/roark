@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Roark::VERSION
   spec.authors       = ["Brett Weaver"]
   spec.email         = ["brett@weav.net"]
-  spec.description   = %q{Workflow to build AMIs via Chef and Cloud Formation}
-  spec.summary       = %q{Workflow to build AMIs via Chef and Cloud Formation}
+  spec.description   = %q{Library and CLI to build AMIs from Instances created via Cloud Formation.}
+  spec.summary       = %q{Howard Roark, master architect and builder of AMIs.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
