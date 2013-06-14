@@ -5,7 +5,7 @@ module Roark
       include Shared
 
       def initialize
-        @options = {}
+        @options = { :parameters => {} }
         @logger  = Roark.logger
       end
 
@@ -25,7 +25,7 @@ module Roark
 
         image_create_workflow = Roark::ImageCreateWorkflow.new :image      => image,
                                                                :template   => template,
-                                                               :parameters => parse_parameters
+                                                               :parameters => @options[:parameters]
         response = image_create_workflow.execute
 
         unless response.success?
@@ -44,8 +44,9 @@ module Roark
             @options[:name] = o
           end
 
-          opts.on("-p", "--parameters [PARAMETERS]", "CSV of parameters and values separated by '=' to pass to Cloud Fomration") do |o|
-            @options[:parameters] = o
+          opts.on("-p", "--parameters [PARAMETERS]", "Parameter name and it's value separated by '=' to pass to Cloud Formation. Can be specified multiple times.") do |o|
+            data = o.split('=')
+            @options[:parameters].merge!({ data.first => data[1] })
           end
 
           opts.on("-r", "--region [REGION]", "Region to build image") do |o|
@@ -64,17 +65,6 @@ module Roark
             @options[:aws_secret_key] = o
           end
         end
-      end
-
-      def parse_parameters
-        p = {}
-        return p unless @options[:parameters]
-        @options[:parameters].split(',').each do |attribs|
-          key   = attribs.split('=').first.gsub(/\s+/, "")
-          value = attribs.gsub(/^.+?=/, '')
-          p[key] = value
-        end
-        p
       end
 
       def command_summary
