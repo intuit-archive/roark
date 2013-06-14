@@ -22,7 +22,7 @@ describe Roark::ImageCreateWorkflow do
     @image_mock.should_receive(:create_ami).and_return @response_stub
     @image_mock.should_receive(:wait_for_ami).and_return @response_stub
     @image_mock.should_receive(:destroy_instance).and_return @response_stub
-    @image_create_workflow.execute
+    expect(@image_create_workflow.execute.success?).to be_true
   end
 
   it "should raise ImageCreateWorkflowError exception" do
