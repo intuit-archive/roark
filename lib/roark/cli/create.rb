@@ -17,10 +17,10 @@ module Roark
 
         image = Roark::Image.new :aws => aws, :name => @options[:name]
 
-        image_create_workflow = Roark::ImageCreateWorkflow.new image
-
-        image_create_workflow.execute :template   => template,
-                                      :parameters => parse_parameters
+        image_create_workflow = Roark::ImageCreateWorkflow.new :image      => image,
+                                                               :template   => template,
+                                                               :parameters => parse_parameters
+        image_create_workflow.execute
       end
 
       def option_parser

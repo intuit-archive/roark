@@ -1,14 +1,16 @@
 module Roark
   class ImageCreateWorkflow
 
-    def initialize(image)
-      @image  = image
-      @logger = Roark.logger
+    def initialize(args)
+      @image      = args[:image]
+      @parameters = args[:parameters]
+      @template   = args[:template]
+      @logger     = Roark.logger
     end
 
-    def execute(args)
-      @image.create_instance :parameters => args[:parameters],
-                             :template   => args[:template]
+    def execute
+      @image.create_instance :parameters => @parameters,
+                             :template   => @template
       @image.wait_for_instance
       @image.stop_instance
       @image.wait_for_instance_to_stop
