@@ -8,28 +8,26 @@ module Roark
           @logger     = Roark.logger
         end
 
-        def destroy(ami)
-          return true unless exists? ami
+        def destroy(ami_id)
+          ami = @connection.ec2.images[ami_id]
 
-          image = @connection.images[ami]
+          @block_device_mappings = ami.block_device_mappings
 
-          block_device_mappings = image.block_device_mappings
+          @logger.info "Deleting AMI '#{ami_id}'."
+          ami.delete
+          delete_snapshots
+        end
 
-          if image.state == :available
-            @logger.info "Deleting image '#{ami}'."
-            image.delete
-          end
+        private
 
-          block_device_mappings.each_value do |v|
+        def delete_snapshots
+          @block_device_mappings.each_value do |v|
             snapshot_id = v[:snapshot_id]
             @logger.info "Deleting snapshot '#{snapshot_id}'."
-            @connection.snapshots[snapshot_id].delete
+            @connection.ec2.snapshots[snapshot_id].delete
           end
         end
 
-        def exists?(ami)
-          @connection.images[ami].exists?
-        end
       end
     end
   end

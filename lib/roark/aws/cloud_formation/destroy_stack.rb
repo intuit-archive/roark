@@ -8,7 +8,7 @@ module Roark
         end
 
         def destroy(name)
-          @connection.stacks[name].delete
+          @connection.cf.stacks[name].delete
         end
 
       end

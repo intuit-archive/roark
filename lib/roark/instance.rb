@@ -1,28 +1,25 @@
 module Roark
   class Instance
 
+    require "forwardable"
+
+    extend Forwardable
+
+    def_delegators :stack, :destroy, :exists?, :in_progress?, :instance_id, :success?
+
     def initialize(args)
-      @aws_access_key = args[:aws_access_key]
-      @aws_secret_key = args[:aws_secret_key]
-      @name           = args[:name]
-      @region         = args[:region]
-      @logger         = Roark.logger
+      @aws    = args[:aws]
+      @name   = args[:name]
+      @logger = Roark.logger
     end
 
     def create(args)
       parameters = args[:parameters]
       template   = args[:template]
 
-      if exists?
-        @logger.error "Stack '#{@name}' already exists."
-        return false
-      end
-
       stack.create :name       => @name,
                    :parameters => parameters,
                    :template   => template
-
-      stack.success? ? instance_id : false
     end
 
     def create_ami_from_instance
@@ -30,28 +27,8 @@ module Roark
                         :instance_id => instance_id
     end
 
-    def destroy
-      stack.destroy
-    end
-
-    def in_progress?
-      stack.in_progress?
-    end
-
-    def success?
-      stack.success?
-    end
-
-    def instance_id
-      stack.instance_id
-    end
-
-    def exists?
-      stack.exists?
-    end
-
     def stop
-      manage_instance.stop instance_id
+      stop_instance.stop instance_id
     end
 
     def status
@@ -61,28 +38,19 @@ module Roark
     private
 
     def stack
-      @stack ||= Stack.new :aws_access_key => @aws_access_key,
-                           :aws_secret_key => @aws_secret_key,
-                           :name           => @name,
-                           :region         => @region
-    end
-
-    def ec2
-      @ec2 ||= Roark::Aws::Ec2::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                       :aws_secret_key => @aws_secret_key,
-                                                       :region         => @region
+      @stack ||= Stack.new :aws  => @aws, :name => @name
     end
 
     def create_ami
-      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new ec2
+      @create_ami ||= Roark::Aws::Ec2::CreateAmi.new @aws
     end
 
-    def manage_instance
-      @manage_instance ||= Roark::Aws::Ec2::ManageInstance.new ec2
+    def stop_instance
+      @stop_instance ||= Roark::Aws::Ec2::StopInstance.new @aws
     end
 
     def instance_status
-      @instance_status ||= Roark::Aws::Ec2::InstanceStatus.new ec2
+      @instance_status ||= Roark::Aws::Ec2::InstanceStatus.new @aws
     end
   end
 end

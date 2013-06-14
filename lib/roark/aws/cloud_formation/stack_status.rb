@@ -8,11 +8,11 @@ module Roark
         end
 
         def status(name)
-          @connection.stacks[name].status
+          @connection.cf.stacks[name].status
         end
 
         def exists?(name)
-          @connection.stacks[name].exists?
+          @connection.cf.stacks[name].exists?
         end
 
       end
