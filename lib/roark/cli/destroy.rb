@@ -11,10 +11,15 @@ module Roark
       def destroy
         option_parser.parse!
 
-        validate_required_options [:image_id, :region, :aws_access_key, :aws_secret_key]
+        validate_required_options [:image_id, :region]
 
         image = Roark::Image.new :aws => aws, :image_id => @options[:image_id]
-        image.destroy
+
+        response = image.destroy
+        unless response.success?
+          Roark.logger.error response.message
+          exit 1
+        end
       end
 
       def option_parser

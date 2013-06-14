@@ -9,11 +9,6 @@ module Roark
         end
 
         def destroy(ami)
-          unless exists? ami
-            @logger.warn "AMI '#{ami}' does not exist."
-            return true
-          end
-
           image = @connection.ec2.images[ami]
 
           @block_device_mappings = image.block_device_mappings

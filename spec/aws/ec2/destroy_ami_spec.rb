@@ -29,8 +29,4 @@ describe Roark::Aws::Ec2::DestroyAmi do
     @destroy_image.destroy 'ami-12345678'
   end
 
-  it "should retrun true if the ami does not exist" do
-    @image_mock.stub :exists? => false
-    @destroy_image.destroy 'ami-12345678'
-  end
 end

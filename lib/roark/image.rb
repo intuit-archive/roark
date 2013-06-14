@@ -61,7 +61,7 @@ module Roark
       @logger.info "Destroying image '#{@image_id}'."
       begin
         ec2_destroy_ami.destroy @image_id
-      rescue AWS::Errors::Base => e
+      rescue AWS::Errors::Base, AWS::Core::Resource::NotFound => e
         return Response.new :code => 1, :message => e.message
       end
       @logger.info "Destroy completed succesfully."
@@ -114,7 +114,7 @@ module Roark
     end
 
     def exists?
-      ec2_ami_state.exists?
+      ec2_ami_state.exists? @image_id
     end
 
     def state
