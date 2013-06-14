@@ -133,6 +133,18 @@ describe Roark::Image do
       end
     end
 
+    describe "#exists?" do
+      it "should return true if the image exists" do
+        @ec2_ami_state_mock.stub :exists? => true
+        expect(@image.exists?).to be_true
+      end
+
+      it "should return false if the image does not exist" do
+        @ec2_ami_state_mock.stub :exists? => false
+        expect(@image.exists?).to be_false
+      end
+    end
+
     describe "#state" do
       it "should call Ec2::AmiState for image state" do
         @ec2_ami_state_mock.stub :state => :available
@@ -143,13 +155,20 @@ describe Roark::Image do
     describe "#wait_for_ami" do
       it "should wait for the ami to not be in state pending" do
         @ec2_ami_state_mock.stub(:state).and_return(:pending, :available)
+        @ec2_ami_state_mock.stub :exists? => true
         @image.should_receive(:sleep).with(15)
         expect(@image.wait_for_ami).to be_true
+      end
 
+      it "should wait for the ami if it does not yet exists" do
+        @ec2_ami_state_mock.stub(:exists?).and_return(false, true)
+        @ec2_ami_state_mock.stub :state => :available
+        @image.should_receive(:sleep).with(15)
+        expect(@image.wait_for_ami).to be_true
       end
 
       it "should return false if the ami is not in state available" do
-        @ec2_ami_state_mock.stub :state => :failed
+        @ec2_ami_state_mock.stub :state => :failed, :exists? => true
         expect(@image.wait_for_ami).to be_false
       end
     end

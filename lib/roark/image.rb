@@ -17,7 +17,7 @@ module Roark
       begin
         instance.create :parameters => args[:parameters],
                         :template   => args[:template]
-      rescue AWS::CloudFormation::Errors => e
+      rescue AWS::Errors::Base => e
         return Response.new :code => 1, :message => e.message
       end
 
@@ -75,7 +75,7 @@ module Roark
     end
 
     def wait_for_ami
-      while pending?
+      while !exists? || pending?
         @logger.info "Waiting for AMI creation to complete. Current state: '#{state}'."
         sleep 15
       end
@@ -95,6 +95,10 @@ module Roark
 
     def pending?
       state == :pending
+    end
+
+    def exists?
+      ec2_ami_state.exists?
     end
 
     def state

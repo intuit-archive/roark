@@ -9,15 +9,43 @@ module Roark
     end
 
     def execute
+      create_instance
+      wait_for_instance
+      stop_instance
+      wait_for_instance_to_stop
+      create_ami
+      wait_for_ami
+      destroy_instance
+      @logger.info "Image create workflow completed succesfully."
+    end
+
+    def create_instance
       @image.create_instance :parameters => @parameters,
                              :template   => @template
+    end
+
+    def wait_for_instance
       @image.wait_for_instance
+    end
+
+    def stop_instance
       @image.stop_instance
+    end
+
+    def wait_for_instance_to_stop
       @image.wait_for_instance_to_stop
+    end
+
+    def create_ami
       @image.create_ami
+    end
+
+    def wait_for_ami
       @image.wait_for_ami
+    end
+
+    def destroy_instance
       @image.destroy_instance
-      @logger.info "Image create workflow completed succesfully."
     end
 
   end
