@@ -1,6 +1,8 @@
 module Roark
   class Instance
 
+    require "forwardable"
+
     extend Forwardable
 
     def_delegators :stack, :destroy, :exists?, :in_progress?, :instance_id, :success

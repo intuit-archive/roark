@@ -13,7 +13,7 @@ module Roark
 
         validate_required_options [:image_id, :region, :aws_access_key, :aws_secret_key]
 
-        image = Roark::Image.new :aws => @aws, :image_id => @options[:image_id]
+        image = Roark::Image.new :aws => aws, :image_id => @options[:image_id]
         image.destroy
       end
 

@@ -1,17 +1,36 @@
 require 'spec_helper'
 
 describe Roark::Aws::Ec2::DestroyAmi do
-  it "should return the state of the given image" do
-    image_stub      = stub 'image', :state => :available
+
+  before do 
+    Roark.logger stub('logger')
+    Roark.logger.stub :info => true, :warn => true
+    @image_mock     = mock 'image'
+    @snapshot_mock  = mock 'snapshot'
     images_mock     = mock 'images'
-    ec2_stub        = stub :images => images_mock
+    ec2_stub        = stub :images    => { 'ami-12345678' => @image_mock },
+                           :snapshots => { 'snap-4417c64c' => @snapshot_mock }
+    @mappings = { "/dev/sda1" =>
+                  { :snapshot_id           => "snap-4417c64c",
+                    :volume_size           => 30,
+                    :delete_on_termination => true,
+                    :volume_type           => "standard"
+                  }
+                }
     connection_stub = stub 'connection', :ec2 => ec2_stub
-    images_mock.should_receive(:create).
-                with(:instance_id => 'i-12345678',
-                     :name        => 'test123').
-                and_return 'an_image'
-    image = Roark::Aws::Ec2::CreateAmi.new connection_stub
-    expect(image.create(:instance_id => 'i-12345678',
-                        :name        => 'test123')).to eq('an_image')
+    @destroy_image = Roark::Aws::Ec2::DestroyAmi.new connection_stub
+  end
+ 
+  it "should deregister the given ami and destroy it's snapshots " do
+    @image_mock.stub :exists? => true
+    @image_mock.stub :block_device_mappings => @mappings
+    @image_mock.should_receive :delete
+    @snapshot_mock.should_receive :delete
+    @destroy_image.destroy 'ami-12345678'
+  end
+
+  it "should retrun true if the ami does not exist" do
+    @image_mock.stub :exists? => false
+    @destroy_image.destroy 'ami-12345678'
   end
 end
