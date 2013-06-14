@@ -6,8 +6,12 @@ module Roark
           @connection = connection
         end
 
-        def state(image_id)
-          @connection.images[image_id].state
+        def state(ami_id)
+          @connection.ec2.images[ami_id].state
+        end
+
+        def exists?(ami_id)
+          @connection.ec2.images[ami_id].exists?
         end
       end
     end

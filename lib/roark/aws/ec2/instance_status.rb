@@ -7,7 +7,7 @@ module Roark
         end
 
         def status(id)
-          @connection.instances[id].status
+          @connection.ec2.instances[id].status
         end
       end
     end

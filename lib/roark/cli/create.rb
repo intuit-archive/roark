@@ -5,38 +5,51 @@ module Roark
       include Shared
 
       def initialize
-        @options = {}
+        @options = { :parameters => {} }
+        @logger  = Roark.logger
       end
 
       def create
         option_parser.parse!
 
-        validate_required_options [:name, :parameters, :region, :template, :aws_access_key, :aws_secret_key]
+        validate_required_options [:name, :region, :template]
 
-        template   = File.read @options[:template]
+        unless File.exists? @options[:template]
+          @logger.error "Template #{@options[:template]} does not exist."
+          exit 1
+        end
 
-        image = Roark::Image.new :aws_access_key => @options[:aws_access_key],
-                                 :aws_secret_key => @options[:aws_secret_key],
-                                 :name           => @options[:name],
-                                 :region         => @options[:region]
+        template = File.read @options[:template]
 
-        image.create :template   => template,
-                     :parameters => parse_parameters(@options[:parameters])
+        ami = Roark::Ami.new :aws => aws, :name => @options[:name]
+
+        ami_create_workflow = Roark::AmiCreateWorkflow.new :ami      => ami,
+                                                           :template   => template,
+                                                           :parameters => @options[:parameters]
+        response = ami_create_workflow.execute
+
+        unless response.success?
+          @logger.error response.message
+          exit 1
+        end
+
+        @logger.info response.message
       end
 
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: roark create [options]"
 
-          opts.on("-n", "--name [NAME]", "Name of image") do |o|
+          opts.on("-n", "--name [NAME]", "Name of AMI") do |o|
             @options[:name] = o
           end
 
-          opts.on("-p", "--parameters [PARAMETERS]", "CSV of parameters and values separated by '=' to pass to Cloud Fomration") do |o|
-            @options[:parameters] = o
+          opts.on("-p", "--parameters [PARAMETERS]", "Parameter name and it's value separated by '=' to pass to Cloud Formation. Can be specified multiple times.") do |o|
+            data = o.split('=')
+            @options[:parameters].merge!({ data.first => data[1] })
           end
 
-          opts.on("-r", "--region [REGION]", "Region to build image") do |o|
+          opts.on("-r", "--region [REGION]", "Region to build AMI") do |o|
             @options[:region] = o
           end
 
@@ -54,18 +67,8 @@ module Roark
         end
       end
 
-      def parse_parameters(parameters)
-        p = {}
-        parameters.split(',').each do |attribs|
-          key   = attribs.split('=').first.gsub(/\s+/, "")
-          value = attribs.gsub(/^.+?=/, '')
-          p[key] = value
-        end
-        p
-      end
-
       def command_summary
-        'Creates a images'
+        'Creates an AMI'
       end
 
     end

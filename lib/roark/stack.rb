@@ -1,11 +1,10 @@
 class Stack
 
   def initialize(args)
-    @aws_access_key = args[:aws_access_key]
-    @aws_secret_key = args[:aws_secret_key]
-    @name           = args[:name]
-    @region         = args[:region]
-    @logger         = Roark.logger
+    @aws    = args[:aws]
+    @name   = args[:name]
+    @region = @aws.region
+    @logger = Roark.logger
   end
 
   def create(args)
@@ -33,8 +32,7 @@ class Stack
   end
 
   def instance_id
-    id = outputs.select {|o| o.key == 'InstanceId'}.first
-    id ? id.value : "unknown"
+    outputs.find {|o| o.key == 'InstanceId'}.value
   end
 
   private
@@ -47,25 +45,19 @@ class Stack
     stack_outputs.outputs @name
   end
 
-  def cf
-    @cf ||= Roark::Aws::CloudFormation::Connection.new.connect :aws_access_key => @aws_access_key,
-                                                               :aws_secret_key => @aws_secret_key,
-                                                               :region         => @region
-  end
-
   def create_stack
-    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new cf
+    @create_stack ||= Roark::Aws::CloudFormation::CreateStack.new @aws
   end
 
   def destroy_stack
-    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new cf
+    @destroy_stack ||= Roark::Aws::CloudFormation::DestroyStack.new @aws
   end
 
   def stack_outputs
-    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new cf
+    @stack_outputs ||= Roark::Aws::CloudFormation::StackOutputs.new @aws
   end
 
   def stack_status
-    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new cf
+    @stack_status ||= Roark::Aws::CloudFormation::StackStatus.new @aws
   end
 end

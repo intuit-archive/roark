@@ -11,24 +11,26 @@ module Roark
       def destroy
         option_parser.parse!
 
-        validate_required_options [:image_id, :region, :aws_access_key, :aws_secret_key]
+        validate_required_options [:ami_id, :region]
 
-        image = Roark::Image.new :aws_access_key => @options[:aws_access_key],
-                                 :aws_secret_key => @options[:aws_secret_key],
-                                 :region         => @options[:region]
-        image.image_id = @options[:image_id]
-        image.destroy
+        ami = Roark::Ami.new :aws => aws, :ami_id => @options[:ami_id]
+
+        response = ami.destroy
+        unless response.success?
+          Roark.logger.error response.message
+          exit 1
+        end
       end
 
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: roark destroy [options]"
 
-          opts.on("-i", "--image-id [IMAGE_ID]", "ID of Image to destroy") do |o|
-            @options[:image_id] = o
+          opts.on("-i", "--ami-id [AMI_ID]", "ID of AMI to destroy") do |o|
+            @options[:ami_id] = o
           end
 
-          opts.on("-r", "--region [REGION]", "Region to build image") do |o|
+          opts.on("-r", "--region [REGION]", "Region to build AMI") do |o|
             @options[:region] = o
           end
 
@@ -43,7 +45,7 @@ module Roark
       end
 
       def command_summary
-        'Destroys a images'
+        'Destroys an AMI'
       end
 
     end

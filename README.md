@@ -1,6 +1,6 @@
 # Roark
 
-Howard Roark, master architect and builder of images.
+Howard Roark, master architect and builder of AMIs.
 
 ## Installation
 
@@ -20,30 +20,49 @@ Or install it yourself as:
 
 Roark builds AMIs from and Instance provided by a Cloud Formation Stack.
 
-Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region.  This stack needs to provide the ID of the instance to be imaged (IE. i-1234abcd) as the output **InstanceId**.
+Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region. This template should create and instance that is fully configured at bootstrap (via **userdata**, **Cloud Init**).
+
+The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as the output **InstanceId**.
 
 ### CLI
 
 Once you have a working templated, set your AWS Access and Secret Keys for the target account:
 
-    export AWS_ACCESS_KEY=xxx
-    export AWS_SECRET_KEY=yyy
+    export AWS_ACCESS_KEY_ID=xxx
+    export AWS_SECRET_ACCESS_KEY=yyy
 
-Create Image
+Create AMI
 
-    roark create -n NAME_OF_IMAGE
+    roark create -n NAME_OF_AMI
                  -r AWS_REGION \
                  -t PATH_TO_CLOUD_FORMATION_TEMPLATE \
-                 -p 'Parameter1=value1,Parameter2=value2' \
-                 --aws-access-key $AWS_ACCESS_KEY \
-                 --aws-secret-key $AWS_SECRET_KEY
+                 -p 'Parameter1=value1' \
+                 -p 'Parameter2=value2'
 
-Destroy Image
+Destroy AMI
 
-    roark destroy -i IMAGE_ID \
-                  -r AWS_REGION \
-                  --aws-access-key $AWS_ACCESS_KEY \
-                  --aws-secret-key $AWS_SECRET_KEY
+    roark destroy -i AMI_ID -r AWS_REGION
+
+## Example
+
+The Cloud Formation Template **example.json** in the /examples directory will create an AMI based off of the public Amazon Linux AMI.
+
+It will takes a single parameter, **KeyName**, which must specify an existing EC2 SSH Key Pair.
+
+It will write the file **/hello_world.txt** as part of bootstraping via userdata.
+
+To create an AMI using this template, first set your AWS Access Key and Secret Key:
+
+    export AWS_ACCESS_KEY_ID=xxx
+    export AWS_SECRET_ACCESS_KEY=yyy
+
+Download the template:
+
+    wget https://github.com/intuit/roark/blob/master/examples/example.json example.json
+
+Create an AMI:
+
+    roark create -n roark-example-ami -r us-west-2 -t example.json
 
 ## Contributing
 
