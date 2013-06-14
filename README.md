@@ -20,7 +20,7 @@ Or install it yourself as:
 
 Roark builds AMIs from and Instance provided by a Cloud Formation Stack.
 
-Roark expects to be provided with a Cloud Formation Template that can be used to instantiate a stack in the given region. This template should create and instance that is fully configured at bootstrap (via **userdata**, **Cloud Init**).
+Roark expects to be provided with a Cloud Formation Template that can be used to create a stack in the given region. This template should create and instance that is fully configured at bootstrap (via **userdata**, **Cloud Init**).
 
 The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as the output **InstanceId**.
 
@@ -47,8 +47,6 @@ Destroy AMI
 
 The Cloud Formation Template **example.json** in the /examples directory will create an AMI based off of the public Amazon Linux AMI.
 
-It will takes a single parameter, **KeyName**, which must specify an existing EC2 SSH Key Pair.
-
 It will write the file **/hello_world.txt** as part of bootstraping via userdata.
 
 To create an AMI using this template, first set your AWS Access Key and Secret Key:
@@ -62,7 +60,7 @@ Download the template:
 
 Create an AMI:
 
-    roark create -n roark-example-ami -r us-west-2 -t example.json
+    roark create -n roark-example-ami -t example.json
 
 ## Contributing
 

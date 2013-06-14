@@ -5,13 +5,13 @@ module Roark
       include Shared
 
       def initialize
-        @options = {}
+        @options = { :region => 'us-east-1' }
       end
 
       def destroy
         option_parser.parse!
 
-        validate_required_options [:ami_id, :region]
+        validate_required_options [:ami_id]
 
         ami = Roark::Ami.new :aws => aws, :ami_id => @options[:ami_id]
 

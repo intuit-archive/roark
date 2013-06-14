@@ -5,14 +5,14 @@ module Roark
       include Shared
 
       def initialize
-        @options = { :parameters => {} }
+        @options = { :parameters => {}, :region => 'us-east-1' }
         @logger  = Roark.logger
       end
 
       def create
         option_parser.parse!
 
-        validate_required_options [:name, :region, :template]
+        validate_required_options [:name, :template]
 
         unless File.exists? @options[:template]
           @logger.error "Template #{@options[:template]} does not exist."
