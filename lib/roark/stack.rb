@@ -32,7 +32,7 @@ class Stack
   end
 
   def instance_id
-    outputs.select {|o| o.key == 'InstanceId'}.first.value
+    outputs.find {|o| o.key == 'InstanceId'}.value
   end
 
   private
