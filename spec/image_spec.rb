@@ -30,6 +30,13 @@ describe Roark::Image do
         @instance_mock.should_receive(:create).with args
         expect(@image.create_instance(args).success?).to be_true
       end
+
+      it "should return unsuccesful if an AWS exception is raised" do
+        args = { :parameters => 'parameters',
+                 :template   => 'template' }
+        @instance_mock.should_receive(:create).and_raise AWS::Errors::Base.new "error"
+        expect(@image.create_instance(args).success?).to be_false
+      end
     end
 
     describe "#create_ami" do
@@ -40,6 +47,13 @@ describe Roark::Image do
         expect(@image.create_ami.success?).to be_true
         expect(@image.image_id).to eq('ami-12345678')
       end
+
+      it "should return unsuccesful if an AWS exception is raised" do
+        image_mock = mock 'image'
+        @instance_mock.should_receive(:create_ami_from_instance).
+                       and_raise AWS::Errors::Base.new "error"
+        expect(@image.create_ami.success?).to be_false
+      end
     end
 
     describe "#stop_instance" do
@@ -47,12 +61,24 @@ describe Roark::Image do
         @instance_mock.should_receive(:stop)
         expect(@image.stop_instance.success?).to be_true
       end
+
+      it "should return unsuccesful if an AWS exception is raised" do
+        @instance_mock.should_receive(:stop).
+                       and_raise AWS::Errors::Base.new "error"
+        expect(@image.stop_instance.success?).to be_false
+      end
     end
 
     describe "#destroy_instance" do
       it "should call destroy on instance" do
         @instance_mock.should_receive(:destroy)
         expect(@image.destroy_instance.success?).to be_true
+      end
+
+      it "should return unsuccesful if an AWS exception is raised" do
+        @instance_mock.should_receive(:destroy).
+                       and_raise AWS::Errors::Base.new "error"
+        expect(@image.destroy_instance.success?).to be_false
       end
     end
 
