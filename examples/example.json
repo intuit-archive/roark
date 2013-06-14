@@ -3,13 +3,6 @@
 
   "Description" : "AWS CloudFormation Sample Template to create instance and output ID for transforming to an image by Roark.",
 
-  "Parameters" : {
-    "KeyName" : {
-      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the web server",
-      "Type" : "String"
-    }
-  },
-
   "Mappings" : {
     "AWSRegionArch2AMI" : {
       "us-east-1"      : { "PV64" : "ami-1624987f" },
@@ -28,7 +21,6 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" }, "PV64" ]},
-        "KeyName" : { "Ref" : "KeyName" },
         "InstanceType" : "m1.large",
         "SecurityGroups" : [{ "Ref" : "Ec2SecurityGroup" }],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [

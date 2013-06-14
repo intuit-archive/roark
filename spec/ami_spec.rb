@@ -43,7 +43,7 @@ describe Roark::Ami do
       it "should call create_ami_from_instance on instance and return ami" do
         ami_mock = mock 'ami'
         @instance_mock.stub :create_ami_from_instance => ami_mock
-        ami_mock.stub :ami_id => 'ami-12345678'
+        ami_mock.stub :image_id => 'ami-12345678'
         expect(@ami.create_ami.success?).to be_true
         expect(@ami.ami_id).to eq('ami-12345678')
       end

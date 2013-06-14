@@ -29,7 +29,7 @@ module Roark
       @logger.info "Creating AMI '#{@name}' from Instance '#{instance_id}'."
       begin
         ami = instance.create_ami_from_instance
-        @ami_id = ami.ami_id
+        @ami_id = ami.image_id
       rescue AWS::Errors::Base => e
         return Response.new :code => 1, :message => e.message
       end
