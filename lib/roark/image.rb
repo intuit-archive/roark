@@ -14,8 +14,13 @@ module Roark
 
     def create_instance(args)
       @logger.info "Creating instance in '#{@region}'."
-      instance.create :parameters => args[:parameters],
-                      :template   => args[:template]
+      begin
+        instance.create :parameters => args[:parameters],
+                        :template   => args[:template]
+      rescue AWS::CloudFormation::Errors => e
+        return Response.new :code => 1, :message => e.message
+      end
+
       @logger.info "Instance created."
       Response.new :code => 0, :message => 'Instance created.'
     end

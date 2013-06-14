@@ -32,9 +32,7 @@ class Stack
   end
 
   def instance_id
-    p outputs
-    id = outputs.select {|o| o.fetch('InstanceId', nil)}.first
-    id ? id.values.first : "unknown"
+    outputs.select {|o| o.key == 'InstanceId'}.first.value
   end
 
   private

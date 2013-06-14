@@ -81,6 +81,7 @@ describe Stack do
 
   describe "#instance_id" do
     before do
+      @stack_output_mock  = mock 'stack output'
       @stack_outputs_mock = mock 'stack output mock'
       Roark::Aws::CloudFormation::StackOutputs.should_receive(:new).
                                                with(@aws_stub).
@@ -88,13 +89,9 @@ describe Stack do
     end
 
     it "should return the instance_id from the stack output" do
-      @stack_outputs_mock.stub :outputs => [ { 'InstanceId' => 'i-12345678' } ]
+      @stack_outputs_mock.stub :outputs => [ @stack_output_mock ]
+      @stack_output_mock.stub :key => 'InstanceId', :value => 'i-12345678'
       expect(@stack.instance_id).to eq('i-12345678')
-    end
-
-    it "should return unkwon if instance id is unavailable" do
-      @stack_outputs_mock.stub :outputs => [ ]
-      expect(@stack.instance_id).to eq('unknown')
     end
 
   end
