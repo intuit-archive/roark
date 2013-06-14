@@ -2,6 +2,14 @@
 
 Howard Roark, master architect and builder of AMIs.
 
+## Overview
+
+* Roark builds AMIs from an Instance created by a Cloud Formation Stack.
+* Roark expects to be provided with a Cloud Formation Template that can be used to create this stack in the given region.
+* This template should create an instance that is fully configured at bootstrap (via userdata, CloudInit, etc).
+* The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as a Cloud Formation Output named **InstanceId**.
+* Once the stack is created, Roark will read the Instance ID from the Cloud Formation Output, stop the instance, convert it into an AMI and destroy the stack.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -15,14 +23,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install roark
-
-## Overview
-
-* Roark builds AMIs from an Instance created by a Cloud Formation Stack.
-* Roark expects to be provided with a Cloud Formation Template that can be used to create this stack in the given region.
-* This template should create an instance that is fully configured at bootstrap (via userdata, CloudInit, etc).
-* The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as a Cloud Formation Output named **InstanceId**.
-* Once the stack is created, Roark will read the Instance ID from the Cloud Formation Output, stop the instance, convert it into an AMI and destroy the stack.
 
 ## Usage
 
