@@ -18,11 +18,15 @@ Or install it yourself as:
 
 ## Usage
 
-Roark builds AMIs from and Instance provided by a Cloud Formation Stack.
+Roark builds AMIs from an Instance provided by a Cloud Formation Stack.
 
-Roark expects to be provided with a Cloud Formation Template that can be used to create a stack in the given region. This template should create and instance that is fully configured at bootstrap (via **userdata**, **Cloud Init**).
+Roark expects to be provided with a Cloud Formation Template that can be used to create this stack in the given region.
 
-The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as the output **InstanceId**.
+This template should create an instance that is fully configured at bootstrap (via userdata, CloudInit, etc).
+
+The stack must provide the ID of the instance to be converted to an AMI (IE. i-1234abcd) as a Cloud Formation Output named **InstanceId**.
+
+Once the stack is created, Roark will read the Instance ID from the Cloud Formation Output, stop the instance, convert it into an AMI and destroy the stack.
 
 ### CLI
 
