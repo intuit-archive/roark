@@ -32,6 +32,8 @@ module Roark
           @logger.error response.message
           exit 1
         end
+
+        @logger.info response.message
       end
 
       def option_parser

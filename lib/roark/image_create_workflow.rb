@@ -14,7 +14,7 @@ module Roark
         response = self.send m.to_sym
         return response unless response.success?
       end
-      @logger.info "Image create workflow completed succesfully."
+      Response.new :code => 0, :message => "Image create workflow completed succesfully."
     end
 
     def create_instance
