@@ -1,6 +1,6 @@
 require "roark/aws"
-require "roark/image"
-require "roark/image_create_workflow"
+require "roark/ami"
+require "roark/ami_create_workflow"
 require "roark/instance"
 require "roark/response"
 require "roark/stack"

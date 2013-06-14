@@ -8,13 +8,13 @@ module Roark
           @logger     = Roark.logger
         end
 
-        def destroy(ami)
-          image = @connection.ec2.images[ami]
+        def destroy(ami_id)
+          ami = @connection.ec2.images[ami_id]
 
-          @block_device_mappings = image.block_device_mappings
+          @block_device_mappings = ami.block_device_mappings
 
-          @logger.info "Deleting image '#{ami}'."
-          image.delete
+          @logger.info "Deleting AMI '#{ami_id}'."
+          ami.delete
           delete_snapshots
         end
 

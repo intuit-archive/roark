@@ -1,12 +1,12 @@
 module Roark
-  class Image
+  class Ami
 
-    attr_accessor :aws, :image_id, :name
+    attr_accessor :aws, :ami_id, :name
 
     def initialize(args)
-      @aws      = args[:aws]
-      @image_id = args[:image_id]
-      @name     = args[:name]
+      @aws    = args[:aws]
+      @ami_id = args[:ami_id]
+      @name   = args[:name]
 
       @region   = @aws.region
       @logger   = Roark.logger
@@ -28,13 +28,13 @@ module Roark
     def create_ami
       @logger.info "Creating AMI '#{@name}' from Instance '#{instance_id}'."
       begin
-        image = instance.create_ami_from_instance
-        @image_id = image.image_id
+        ami = instance.create_ami_from_instance
+        @ami_id = ami.ami_id
       rescue AWS::Errors::Base => e
         return Response.new :code => 1, :message => e.message
       end
-      @logger.info "Image '#{@image_id}' created."
-      Response.new :code => 0, :message => "Image '#{@image_id}' created."
+      @logger.info "AMI '#{@ami_id}' created."
+      Response.new :code => 0, :message => "AMI '#{@ami_id}' created."
     end
 
     def stop_instance
@@ -58,9 +58,9 @@ module Roark
     end
 
     def destroy
-      @logger.info "Destroying image '#{@image_id}'."
+      @logger.info "Destroying AMI '#{@ami_id}'."
       begin
-        ec2_destroy_ami.destroy @image_id
+        ec2_destroy_ami.destroy @ami_id
       rescue AWS::Errors::Base, AWS::Core::Resource::NotFound => e
         return Response.new :code => 1, :message => e.message
       end
@@ -119,11 +119,11 @@ module Roark
     end
 
     def exists?
-      ec2_ami_state.exists? @image_id
+      ec2_ami_state.exists? @ami_id
     end
 
     def state
-      ec2_ami_state.state @image_id
+      ec2_ami_state.state @ami_id
     end
 
     def instance_id

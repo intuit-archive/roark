@@ -21,12 +21,12 @@ module Roark
 
         template = File.read @options[:template]
 
-        image = Roark::Image.new :aws => aws, :name => @options[:name]
+        ami = Roark::Ami.new :aws => aws, :name => @options[:name]
 
-        image_create_workflow = Roark::ImageCreateWorkflow.new :image      => image,
-                                                               :template   => template,
-                                                               :parameters => @options[:parameters]
-        response = image_create_workflow.execute
+        ami_create_workflow = Roark::AmiCreateWorkflow.new :ami      => ami,
+                                                           :template   => template,
+                                                           :parameters => @options[:parameters]
+        response = ami_create_workflow.execute
 
         unless response.success?
           @logger.error response.message
@@ -40,7 +40,7 @@ module Roark
         OptionParser.new do |opts|
           opts.banner = "Usage: roark create [options]"
 
-          opts.on("-n", "--name [NAME]", "Name of image") do |o|
+          opts.on("-n", "--name [NAME]", "Name of AMI") do |o|
             @options[:name] = o
           end
 
@@ -49,7 +49,7 @@ module Roark
             @options[:parameters].merge!({ data.first => data[1] })
           end
 
-          opts.on("-r", "--region [REGION]", "Region to build image") do |o|
+          opts.on("-r", "--region [REGION]", "Region to build AMI") do |o|
             @options[:region] = o
           end
 
@@ -68,7 +68,7 @@ module Roark
       end
 
       def command_summary
-        'Creates an image'
+        'Creates an AMI'
       end
 
     end

@@ -18,7 +18,7 @@ describe Roark::Aws::Ec2::DestroyAmi do
                   }
                 }
     connection_stub = stub 'connection', :ec2 => ec2_stub
-    @destroy_image = Roark::Aws::Ec2::DestroyAmi.new connection_stub
+    @destroy_ami = Roark::Aws::Ec2::DestroyAmi.new connection_stub
   end
  
   it "should deregister the given ami and destroy it's snapshots " do
@@ -26,7 +26,7 @@ describe Roark::Aws::Ec2::DestroyAmi do
     @image_mock.stub :block_device_mappings => @mappings
     @image_mock.should_receive :delete
     @snapshot_mock.should_receive :delete
-    @destroy_image.destroy 'ami-12345678'
+    @destroy_ami.destroy 'ami-12345678'
   end
 
 end

@@ -1,8 +1,8 @@
 module Roark
-  class ImageCreateWorkflow
+  class AmiCreateWorkflow
 
     def initialize(args)
-      @image      = args[:image]
+      @ami        = args[:ami]
       @parameters = args[:parameters]
       @template   = args[:template]
       @logger     = Roark.logger
@@ -14,36 +14,36 @@ module Roark
         response = self.send m.to_sym
         return response unless response.success?
       end
-      Response.new :code => 0, :message => "Image create workflow completed succesfully."
+      Response.new :code => 0, :message => "AMI create workflow completed succesfully."
     end
 
     def create_instance
-      @image.create_instance :parameters => @parameters,
+      @ami.create_instance :parameters => @parameters,
                              :template   => @template
     end
 
     def wait_for_instance
-      @image.wait_for_instance
+      @ami.wait_for_instance
     end
 
     def stop_instance
-      @image.stop_instance
+      @ami.stop_instance
     end
 
     def wait_for_instance_to_stop
-      @image.wait_for_instance_to_stop
+      @ami.wait_for_instance_to_stop
     end
 
     def create_ami
-      @image.create_ami
+      @ami.create_ami
     end
 
     def wait_for_ami
-      @image.wait_for_ami
+      @ami.wait_for_ami
     end
 
     def destroy_instance
-      @image.destroy_instance
+      @ami.destroy_instance
     end
 
   end

@@ -7,7 +7,7 @@ describe Stack do
     Roark.logger.stub :info => true
     @aws_stub = stub 'aws', :region => 'us-west-1'
     @stack = Stack.new :aws  => @aws_stub,
-                       :name => 'test-image'
+                       :name => 'test-ami'
   end
 
   describe "#create" do
@@ -17,7 +17,7 @@ describe Stack do
                                               with(@aws_stub).
                                               and_return create_stack_mock
       create_stack_mock.should_receive(:create).
-                        with(:name       => 'test-image',
+                        with(:name       => 'test-ami',
                              :parameters => 'params',
                              :template   => 'template')
       @stack.create :parameters => 'params',
@@ -31,7 +31,7 @@ describe Stack do
       Roark::Aws::CloudFormation::DestroyStack.should_receive(:new).
                                                with(@aws_stub).
                                                and_return destroy_stack_mock
-      destroy_stack_mock.should_receive(:destroy).with('test-image')
+      destroy_stack_mock.should_receive(:destroy).with('test-ami')
       @stack.destroy
     end
   end

@@ -6,7 +6,7 @@ describe Roark::Instance do
     logger_stub = stub 'logger stub', :info => true
     Roark.logger logger_stub
     @instance = Roark::Instance.new :aws  => @aws_stub,
-                                    :name => 'test-image'
+                                    :name => 'test-ami'
   end
 
   %w(destroy exists? in_progress? instance_id success?).each do |method|
@@ -15,7 +15,7 @@ describe Roark::Instance do
         stack_mock = mock 'stack mock'
         stack_mock.should_receive method.to_sym
         Stack.should_receive(:new).
-              with(:aws => @aws_stub, :name => 'test-image').
+              with(:aws => @aws_stub, :name => 'test-ami').
               and_return stack_mock
         @instance.send method.to_sym
       end
@@ -27,14 +27,14 @@ describe Roark::Instance do
       @stack_mock = mock 'stack mock'
       @stack_mock.stub :instance_id => 'i-12345678'
       Stack.should_receive(:new).
-            with(:aws => @aws_stub, :name => 'test-image').
+            with(:aws => @aws_stub, :name => 'test-ami').
             and_return @stack_mock
     end
 
     describe "#create" do
       it "should create an instance" do
         @stack_mock.should_receive(:create).
-                    with(:name       => 'test-image',
+                    with(:name       => 'test-ami',
                          :parameters => 'params',
                          :template   => 'template')
         @instance.create :parameters => 'params',
@@ -49,7 +49,7 @@ describe Roark::Instance do
                                    with(@aws_stub).
                                    and_return create_ami_mock
         create_ami_mock.should_receive(:create).
-                        with(:name        => 'test-image',
+                        with(:name        => 'test-ami',
                              :instance_id => 'i-12345678')
         @instance.create_ami_from_instance
       end
