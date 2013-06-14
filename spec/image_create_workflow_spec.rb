@@ -29,6 +29,6 @@ describe Roark::ImageCreateWorkflow do
     @response_stub.stub :success? => false, :message => 'error'
     @image_mock.should_receive(:create_instance).with(:parameters => { 'key' => 'val' },
                                                       :template   => 'template').and_return @response_stub
-    expect { @image_create_workflow.execute }.to raise_error Roark::Exceptions::ImageCreateWorkflowError
+    expect(@image_create_workflow.execute.success?).to be_false
   end
 end

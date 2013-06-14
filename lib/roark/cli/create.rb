@@ -26,10 +26,10 @@ module Roark
         image_create_workflow = Roark::ImageCreateWorkflow.new :image      => image,
                                                                :template   => template,
                                                                :parameters => parse_parameters
-        begin
-          image_create_workflow.execute
-        rescue Roark::Exceptions::ImageCreateWorkflowError => e
-          @logger.error e.message
+        response = image_create_workflow.execute
+
+        unless response.success?
+          @logger.error response.message
           exit 1
         end
       end
