@@ -9,7 +9,7 @@ describe Roark::Instance do
                                     :name => 'test-image'
   end
 
-  %w(destroy exists? in_progress? instance_id success).each do |method|
+  %w(destroy exists? in_progress? instance_id success?).each do |method|
     describe "##{method}" do
       it "should call stack #{method}" do
         stack_mock = mock 'stack mock'

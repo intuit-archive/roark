@@ -28,7 +28,7 @@ describe Roark::Image do
         args = { :parameters => 'parameters',
                  :template   => 'template' }
         @instance_mock.should_receive(:create).with args
-        @image.create_instance args
+        expect(@image.create_instance(args).success?).to be_true
       end
     end
 
@@ -37,15 +37,22 @@ describe Roark::Image do
         image_mock = mock 'image'
         @instance_mock.stub :create_ami_from_instance => image_mock
         image_mock.stub :image_id => 'ami-12345678'
-        @image.create_ami
+        expect(@image.create_ami.success?).to be_true
         expect(@image.image_id).to eq('ami-12345678')
+      end
+    end
+
+    describe "#stop_instance" do
+      it "should call stop on instance" do
+        @instance_mock.should_receive(:stop)
+        expect(@image.stop_instance.success?).to be_true
       end
     end
 
     describe "#destroy_instance" do
       it "should call destroy on instance" do
         @instance_mock.should_receive(:destroy)
-        @image.destroy_instance
+        expect(@image.destroy_instance.success?).to be_true
       end
     end
 
@@ -157,7 +164,7 @@ describe Roark::Image do
                                     with(@aws_mock).
                                     and_return ec2_destroy_ami_mock
         ec2_destroy_ami_mock.should_receive(:destroy).with('ami-12345678')
-        @image.destroy
+        expect(@image.destroy.success?).to be_true
       end
     end
   end

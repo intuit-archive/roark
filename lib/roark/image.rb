@@ -12,23 +12,12 @@ module Roark
       @logger   = Roark.logger
     end
 
-    def available?
-      state == :available
-    end
-
-    def pending?
-      state == :pending
-    end
-
-    def state
-      ec2_ami_state.state @image_id
-    end
-
     def create_instance(args)
       @logger.info "Creating instance in '#{@region}'."
       instance.create :parameters => args[:parameters],
                       :template   => args[:template]
       @logger.info "Instance created."
+      Response.new :code => 0, :message => 'Instance created.'
     end
 
     def create_ami
@@ -36,16 +25,26 @@ module Roark
       image = instance.create_ami_from_instance
       @image_id = image.image_id
       @logger.info "Image '#{@image_id}' created."
+      Response.new :code => 0, :message => "Image '#{@image_id}' created."
     end
 
     def stop_instance
       @logger.info "Stopping instance."
       instance.stop
+      Response.new :code => 0, :message => "Instance stopped."
     end
 
     def destroy_instance
       instance.destroy
       @logger.info "Instance destroyed."
+      Response.new :code => 0, :message => "Instance destroyed."
+    end
+
+    def destroy
+      @logger.info "Destroying image '#{@image_id}'."
+      ec2_destroy_ami.destroy @image_id
+      @logger.info "Destroy completed succesfully."
+      Response.new :code => 0, :message => "Destroy completed succesfully."
     end
 
     def wait_for_instance
@@ -85,10 +84,16 @@ module Roark
       end
     end
 
-    def destroy
-      @logger.info "Destroying image '#{@image_id}'."
-      ec2_destroy_ami.destroy @image_id
-      @logger.info "Destroy completed succesfully."
+    def available?
+      state == :available
+    end
+
+    def pending?
+      state == :pending
+    end
+
+    def state
+      ec2_ami_state.state @image_id
     end
 
     def instance_id

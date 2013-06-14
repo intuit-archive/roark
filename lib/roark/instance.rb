@@ -5,7 +5,7 @@ module Roark
 
     extend Forwardable
 
-    def_delegators :stack, :destroy, :exists?, :in_progress?, :instance_id, :success
+    def_delegators :stack, :destroy, :exists?, :in_progress?, :instance_id, :success?
 
     def initialize(args)
       @aws    = args[:aws]
