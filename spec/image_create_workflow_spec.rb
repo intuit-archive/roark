@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Roark::ImageCreateWorkflow do
   it "should create and execute a new workflow" do
     logger_stub = stub 'logger'
+    response_stub = stub 'response', :success? => true
     Roark.logger logger_stub
     Roark.logger.stub :info => true
     image_mock            = mock 'image mock'
@@ -10,13 +11,13 @@ describe Roark::ImageCreateWorkflow do
                                                            :parameters => { 'key' => 'val' },
                                                            :template   => 'template'
     image_mock.should_receive(:create_instance).with(:parameters => { 'key' => 'val' },
-                                                     :template   => 'template')
-    image_mock.should_receive(:wait_for_instance)
-    image_mock.should_receive(:stop_instance)
-    image_mock.should_receive(:wait_for_instance_to_stop)
-    image_mock.should_receive(:create_ami)
-    image_mock.should_receive(:wait_for_ami)
-    image_mock.should_receive(:destroy_instance)
+                                                     :template   => 'template').and_return response_stub
+    image_mock.should_receive(:wait_for_instance).and_return response_stub
+    image_mock.should_receive(:stop_instance).and_return response_stub
+    image_mock.should_receive(:wait_for_instance_to_stop).and_return response_stub
+    image_mock.should_receive(:create_ami).and_return response_stub
+    image_mock.should_receive(:wait_for_ami).and_return response_stub
+    image_mock.should_receive(:destroy_instance).and_return response_stub
     image_create_workflow.execute
   end
 end

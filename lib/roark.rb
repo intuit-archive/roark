@@ -1,4 +1,5 @@
 require "roark/aws"
+require "roark/exceptions"
 require "roark/image"
 require "roark/image_create_workflow"
 require "roark/instance"

@@ -27,27 +27,43 @@ module Roark
 
     def create_ami
       @logger.info "Creating AMI '#{@name}' from Instance '#{instance_id}'."
-      image = instance.create_ami_from_instance
-      @image_id = image.image_id
+      begin
+        image = instance.create_ami_from_instance
+        @image_id = image.image_id
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
       @logger.info "Image '#{@image_id}' created."
       Response.new :code => 0, :message => "Image '#{@image_id}' created."
     end
 
     def stop_instance
       @logger.info "Stopping instance."
-      instance.stop
+      begin
+        instance.stop
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
       Response.new :code => 0, :message => "Instance stopped."
     end
 
     def destroy_instance
-      instance.destroy
+      begin
+        instance.destroy
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
       @logger.info "Instance destroyed."
       Response.new :code => 0, :message => "Instance destroyed."
     end
 
     def destroy
       @logger.info "Destroying image '#{@image_id}'."
-      ec2_destroy_ami.destroy @image_id
+      begin
+        ec2_destroy_ami.destroy @image_id
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
       @logger.info "Destroy completed succesfully."
       Response.new :code => 0, :message => "Destroy completed succesfully."
     end

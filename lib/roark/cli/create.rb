@@ -20,7 +20,12 @@ module Roark
         image_create_workflow = Roark::ImageCreateWorkflow.new :image      => image,
                                                                :template   => template,
                                                                :parameters => parse_parameters
-        image_create_workflow.execute
+        begin
+          image_create_workflow.execute
+        rescue Roark::Exceptions::ImageCreateWorkflowError => e
+          Roark.logger.error e.message
+          exit 1
+        end
       end
 
       def option_parser
