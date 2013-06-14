@@ -6,6 +6,8 @@ Howard Roark, master architect and builder of AMIs.
 
 ## Overview
 
+Roark was built to solve the challenge of automating AMI builds across multiple AWS accounts and regions.
+
 * Roark builds AMIs from an Instance created by a Cloud Formation Stack.
 * Roark expects to be provided with a Cloud Formation Template that can be used to create this stack.
 * This template should create an Instance that is fully configured at bootstrap (via userdata, CloudInit, etc).
