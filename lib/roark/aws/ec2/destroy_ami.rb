@@ -13,14 +13,17 @@ module Roark
 
           image = @connection.ec2.images[ami]
 
-          block_device_mappings = image.block_device_mappings
+          @block_device_mappings = image.block_device_mappings
 
-          if image.state == :available
-            @logger.info "Deleting image '#{ami}'."
-            image.delete
-          end
+          @logger.info "Deleting image '#{ami}'."
+          image.delete
+          delete_snapshots
+        end
 
-          block_device_mappings.each_value do |v|
+        private
+
+        def delete_snapshots
+          @block_device_mappings.each_value do |v|
             snapshot_id = v[:snapshot_id]
             @logger.info "Deleting snapshot '#{snapshot_id}'."
             @connection.ec2.snapshots[snapshot_id].delete
