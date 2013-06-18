@@ -212,6 +212,18 @@ describe Roark::Ami do
         expect(@ami.destroy.success?).to be_true
       end
     end
+    
+    describe "#authorize_account_ids" do
+      it "should call authorize with the given account ids" do
+        @ami.ami_id = 'ami-12345678'
+        ec2_ami_authorizations_mock = mock 'ami authorizations'
+        Roark::Aws::Ec2::AmiAuthorizations.should_receive(:new).
+                                           with(@aws_mock).
+                                           and_return ec2_ami_authorizations_mock
+        ec2_ami_authorizations_mock.should_receive(:add).with(['1234-1234-1234'])
+        expect(@ami.authorize_account_ids(['1234-1234-1234']).success?).to be_true
+      end
+    end
   end
 
 end

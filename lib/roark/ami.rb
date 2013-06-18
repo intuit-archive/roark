@@ -110,6 +110,15 @@ module Roark
       end
     end
 
+    def authorize_account_ids(account_ids)
+      begin
+        authorize account_ids
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
+      Response.new :code => 0, :message => 'Authorizations completed successfully.'
+    end
+
     def available?
       state == :available
     end
@@ -132,12 +141,20 @@ module Roark
 
     private
 
+    def authorize(account_ids)
+      ec2_ami_authorizations.add account_ids
+    end
+
     def instance
       @instance ||= Instance.new :aws => @aws, :name => @name
     end
 
     def ec2_ami_state
       @ec2_ami_state ||= Roark::Aws::Ec2::AmiState.new @aws
+    end
+
+    def ec2_ami_authorizations
+      @ec2_ami_authorizations ||= Roark::Aws::Ec2::AmiAuthorizations.new @aws
     end
 
     def ec2_destroy_ami

@@ -22,6 +22,7 @@ describe Roark::AmiCreateWorkflow do
     @ami_mock.should_receive(:create_ami).and_return @response_stub
     @ami_mock.should_receive(:wait_for_ami).and_return @response_stub
     @ami_mock.should_receive(:destroy_instance).and_return @response_stub
+    @ami_mock.should_receive(:authorize_account_ids).and_return @response_stub
     expect(@ami_create_workflow.execute.success?).to be_true
   end
 

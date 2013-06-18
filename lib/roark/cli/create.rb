@@ -5,7 +5,7 @@ module Roark
       include Shared
 
       def initialize
-        @options = { :parameters => {}, :region => 'us-east-1' }
+        @options = { :account_ids => [], :parameters => {}, :region => 'us-east-1' }
         @logger  = Roark.logger
       end
 
@@ -23,9 +23,10 @@ module Roark
 
         ami = Roark::Ami.new :aws => aws, :name => @options[:name]
 
-        ami_create_workflow = Roark::AmiCreateWorkflow.new :ami      => ami,
-                                                           :template   => template,
-                                                           :parameters => @options[:parameters]
+        ami_create_workflow = Roark::AmiCreateWorkflow.new :account_ids => @options[:account_ids],
+                                                           :ami         => ami,
+                                                           :template    => template,
+                                                           :parameters  => @options[:parameters]
         response = ami_create_workflow.execute
 
         unless response.success?
@@ -39,6 +40,10 @@ module Roark
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: roark create [options]"
+
+          opts.on("-a", "--account_id [ACCOUNT_ID]", "AWS Account ID to Authorize. Can be specified multiple times.") do |o|
+            @options[:account_ids] << o
+          end
 
           opts.on("-n", "--name [NAME]", "Name of AMI") do |o|
             @options[:name] = o
