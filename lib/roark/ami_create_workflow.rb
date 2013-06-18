@@ -19,7 +19,7 @@ module Roark
 
     def create_instance
       @ami.create_instance :parameters => @parameters,
-                             :template   => @template
+                           :template   => @template
     end
 
     def wait_for_instance

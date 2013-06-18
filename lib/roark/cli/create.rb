@@ -23,7 +23,7 @@ module Roark
 
         ami = Roark::Ami.new :aws => aws, :name => @options[:name]
 
-        ami_create_workflow = Roark::AmiCreateWorkflow.new :ami      => ami,
+        ami_create_workflow = Roark::AmiCreateWorkflow.new :ami        => ami,
                                                            :template   => template,
                                                            :parameters => @options[:parameters]
         response = ami_create_workflow.execute
