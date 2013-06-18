@@ -23,4 +23,14 @@ describe Roark::Aws::Connection do
       expect(@connection.ec2).to eq(ec2_mock)
     end
   end
+
+  describe "#ec2" do
+    it "should create and AWS::EC2::PermissionCollection" do
+      pc_mock = mock 'pc'
+      AWS::EC2::PermissionCollection.should_receive(:new).
+                                     with('ami-12345678', @args).
+                                     and_return pc_mock
+      expect(@connection.permission_collection('ami-12345678')).to eq(pc_mock)
+    end
+  end
 end
