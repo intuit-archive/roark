@@ -10,16 +10,18 @@ module Roark
         @region            = args[:region]
       end
 
+      def config
+        { :access_key_id     => @access_key_id,
+          :secret_access_key => @secret_access_key,
+          :region            => @region }
+      end
+
       def cf
-        @cf ||= AWS::CloudFormation.new :access_key_id     => @access_key_id,
-                                        :secret_access_key => @secret_access_key,
-                                        :region            => @region
+        @cf ||= AWS::CloudFormation.new config
       end
 
       def ec2
-        @ec2 ||= AWS::EC2.new :access_key_id     => @access_key_id,
-                              :secret_access_key => @secret_access_key,
-                              :region            => @region
+        @ec2 ||= AWS::EC2.new config
       end
 
     end

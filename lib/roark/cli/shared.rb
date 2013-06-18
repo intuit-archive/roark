@@ -10,6 +10,15 @@ module Roark
         end
       end
 
+      def validate_account_ids_format
+        @options[:account_ids].each do |a|
+          unless a =~ /^[0-9]{12}$/
+            @logger.error "Account '#{a}' invalid. IDs must be 12 digits without dashes."
+            exit 1
+          end
+        end
+      end
+
       def command_name
         self.class.name.split('::').last.downcase
       end

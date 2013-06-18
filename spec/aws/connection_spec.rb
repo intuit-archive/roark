@@ -23,4 +23,5 @@ describe Roark::Aws::Connection do
       expect(@connection.ec2).to eq(ec2_mock)
     end
   end
+
 end
