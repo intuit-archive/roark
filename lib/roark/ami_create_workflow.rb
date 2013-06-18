@@ -2,15 +2,16 @@ module Roark
   class AmiCreateWorkflow
 
     def initialize(args)
-      @ami        = args[:ami]
-      @parameters = args[:parameters]
-      @template   = args[:template]
-      @logger     = Roark.logger
+      @account_ids = args[:account_ids]
+      @ami         = args[:ami]
+      @parameters  = args[:parameters]
+      @template    = args[:template]
+      @logger      = Roark.logger
     end
 
     def execute
       %w(create_instance wait_for_instance stop_instance wait_for_instance_to_stop
-         create_ami wait_for_ami destroy_instance).each do |m|
+         create_ami wait_for_ami destroy_instance authorize_account_ids).each do |m|
         response = self.send m.to_sym
         return response unless response.success?
       end
@@ -19,7 +20,7 @@ module Roark
 
     def create_instance
       @ami.create_instance :parameters => @parameters,
-                             :template   => @template
+                           :template   => @template
     end
 
     def wait_for_instance
@@ -44,6 +45,10 @@ module Roark
 
     def destroy_instance
       @ami.destroy_instance
+    end
+
+    def authorize_account_ids
+      @ami.authorize_account_ids @account_ids
     end
 
   end
