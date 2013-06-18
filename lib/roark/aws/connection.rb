@@ -24,10 +24,6 @@ module Roark
         @ec2 ||= AWS::EC2.new config
       end
 
-      def permission_collection(resource)
-        AWS::EC2::PermissionCollection.new resource, config
-      end
-
     end
   end
 end
