@@ -8,7 +8,7 @@ describe Roark::Ami do
     @aws_mock = mock "aws connection mock"
     @aws_mock.stub :region => 'us-west-1'
     init_args = { :aws    => @aws_mock,
-                  :name   => 'test-ami' }
+                  :name   => 'Intu_BaselineImage.1.2.3' }
 
     @ami = Roark::Ami.new init_args
   end
@@ -18,7 +18,7 @@ describe Roark::Ami do
       @instance_mock = mock 'instance mock'
       Roark::Instance.should_receive(:new).
                       with(:aws  => @aws_mock,
-                           :name => 'test-ami').
+                           :name => 'intu-baselineimage-1-2-3').
                       and_return @instance_mock
       @instance_mock.stub :instance_id => 'i-1234abcd'
     end

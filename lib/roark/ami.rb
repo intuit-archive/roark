@@ -141,12 +141,16 @@ module Roark
 
     private
 
+    def instance_name
+      @name.downcase.gsub /[^a-zA-Z0-9\-]/, '-'
+    end
+
     def authorize(account_ids)
       ec2_ami_authorizations.add :ami_id => @ami_id, :account_ids => account_ids
     end
 
     def instance
-      @instance ||= Instance.new :aws => @aws, :name => @name
+      @instance ||= Instance.new :aws => @aws, :name => instance_name
     end
 
     def ec2_ami_state
