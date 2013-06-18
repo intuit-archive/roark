@@ -142,7 +142,7 @@ module Roark
     private
 
     def authorize(account_ids)
-      ec2_ami_authorizations.add account_ids
+      ec2_ami_authorizations.add :ami_id => @ami_id, :account_ids => account_ids
     end
 
     def instance

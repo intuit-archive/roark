@@ -220,7 +220,9 @@ describe Roark::Ami do
         Roark::Aws::Ec2::AmiAuthorizations.should_receive(:new).
                                            with(@aws_mock).
                                            and_return ec2_ami_authorizations_mock
-        ec2_ami_authorizations_mock.should_receive(:add).with(['1234-1234-1234'])
+        ec2_ami_authorizations_mock.should_receive(:add).
+                                    with :ami_id      => "ami-12345678",
+                                         :account_ids => ["1234-1234-1234"]
         expect(@ami.authorize_account_ids(['1234-1234-1234']).success?).to be_true
       end
     end

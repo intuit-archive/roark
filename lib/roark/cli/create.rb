@@ -14,6 +14,8 @@ module Roark
 
         validate_required_options [:name, :template]
 
+        validate_account_ids_format
+
         unless File.exists? @options[:template]
           @logger.error "Template #{@options[:template]} does not exist."
           exit 1

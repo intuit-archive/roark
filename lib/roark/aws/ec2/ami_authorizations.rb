@@ -11,8 +11,13 @@ module Roark
         def add(args)
           account_ids = args[:account_ids]
           ami_id      = args[:ami_id]
-          account_ids.each {|a| @logger.info "Authorizing account '#{a}.'"}
-          @connection.permission_collection(ami_id).add account_ids
+
+          ami         = @connection.ec2.images[ami_id]
+
+          account_ids.each do |a|
+            @logger.info "Authorizing account '#{a}'."
+            ami.permissions.add a
+          end
         end
 
       end
