@@ -43,7 +43,9 @@ Create AMI
                  -r AWS_REGION \
                  -t PATH_TO_CLOUD_FORMATION_TEMPLATE \
                  -p 'Parameter1=value1' \
-                 -p 'Parameter2=value2'
+                 -p 'Parameter2=value2' \
+                 -a '123456789012' \
+                 -a '123456789013'
 
 Destroy AMI
 
