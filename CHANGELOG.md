@@ -1,6 +1,7 @@
-## HEAD:
+## 0.2.0 (06/20/2013):
 
 * Adding --tag
+* Change Cloud Formation Template argument from -t to -c 
 
 ## 0.1.0 (06/18/2013):
 
