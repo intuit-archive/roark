@@ -4,6 +4,7 @@ module Roark
     def initialize(args)
       @account_ids = args[:account_ids]
       @ami         = args[:ami]
+      @tags        = args[:tags]
       @parameters  = args[:parameters]
       @template    = args[:template]
       @logger      = Roark.logger
@@ -11,7 +12,7 @@ module Roark
 
     def execute
       %w(create_instance wait_for_instance stop_instance wait_for_instance_to_stop
-         create_ami wait_for_ami destroy_instance authorize_account_ids).each do |m|
+         create_ami wait_for_ami destroy_instance add_tags authorize_account_ids).each do |m|
         response = self.send m.to_sym
         return response unless response.success?
       end
@@ -45,6 +46,10 @@ module Roark
 
     def destroy_instance
       @ami.destroy_instance
+    end
+
+    def add_tags
+      @ami.add_tags @tags
     end
 
     def authorize_account_ids

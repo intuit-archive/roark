@@ -227,6 +227,21 @@ describe Roark::Ami do
         expect(@ami.authorize_account_ids(account_ids).success?).to be_true
       end
     end
+
+    describe "#add_tags" do
+      it "should call tag with the given tags" do
+        @ami.ami_id = 'ami-12345678'
+        tags = { 'test1' => 'val1', 'test2' => 'val2' }
+        ec2_ami_tags_mock = mock 'ami tags'
+        Roark::Aws::Ec2::AmiTags.should_receive(:new).
+                                 with(@aws_mock).
+                                 and_return ec2_ami_tags_mock
+        ec2_ami_tags_mock.should_receive(:add).
+                           with :ami_id      => "ami-12345678",
+                                :tags        => tags
+        expect(@ami.add_tags(tags).success?).to be_true
+      end
+    end
   end
 
 end

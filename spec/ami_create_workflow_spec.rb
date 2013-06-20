@@ -8,9 +8,11 @@ describe Roark::AmiCreateWorkflow do
     Roark.logger.stub :info => true
     @ami_mock            = mock 'ami mock'
     @account_ids = ['123456789012', '123456789013']
+    @tags        = { 'tag1' => 'val1', 'tag2' => 'val2' }
     @ami_create_workflow = Roark::AmiCreateWorkflow.new :account_ids => @account_ids,
                                                         :ami         => @ami_mock,
                                                         :parameters  => { 'key' => 'val' },
+                                                        :tags        => @tags,
                                                         :template    => 'template'
   end
 
@@ -25,6 +27,7 @@ describe Roark::AmiCreateWorkflow do
     @ami_mock.should_receive(:wait_for_ami).and_return @response_stub
     @ami_mock.should_receive(:destroy_instance).and_return @response_stub
     @ami_mock.should_receive(:authorize_account_ids).with(@account_ids).and_return @response_stub
+    @ami_mock.should_receive(:add_tags).with(@tags).and_return @response_stub
     expect(@ami_create_workflow.execute.success?).to be_true
   end
 
