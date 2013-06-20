@@ -1,3 +1,7 @@
+## HEAD:
+
+* Adding --tag
+
 ## 0.1.0 (06/18/2013):
 
 * Sanitize stack name to remove invalid characters.
