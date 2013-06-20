@@ -41,11 +41,13 @@ Create AMI
 
     roark create -n NAME_OF_AMI
                  -r AWS_REGION \
-                 -t PATH_TO_CLOUD_FORMATION_TEMPLATE \
+                 -c PATH_TO_CLOUD_FORMATION_TEMPLATE \
                  -p 'Parameter1=value1' \
                  -p 'Parameter2=value2' \
                  -a '123456789012' \
-                 -a '123456789013'
+                 -a '123456789013' \
+                 -t 'ami_tag_1=val1' \
+                 -t 'ami_tag_2=val2' \
 
 Destroy AMI
 
@@ -68,7 +70,7 @@ Download the template:
 
 Create an AMI:
 
-    roark create -n roark-example-ami -t example.json
+    roark create -n roark-example-ami -c example.json
 
 ## Contributing
 

@@ -5,7 +5,10 @@ module Roark
       include Shared
 
       def initialize
-        @options = { :account_ids => [], :parameters => {}, :region => 'us-east-1' }
+        @options = { :account_ids => [],
+                     :parameters  => {},
+                     :region      => 'us-east-1',
+                     :tags        => {} }
         @logger  = Roark.logger
       end
 
@@ -27,6 +30,7 @@ module Roark
 
         ami_create_workflow = Roark::AmiCreateWorkflow.new :account_ids => @options[:account_ids],
                                                            :ami         => ami,
+                                                           :tags        => @options[:tags],
                                                            :template    => template,
                                                            :parameters  => @options[:parameters]
         response = ami_create_workflow.execute
@@ -47,6 +51,10 @@ module Roark
             @options[:account_ids] << o
           end
 
+          opts.on("-c", "--cloud_formation_template [CLOUD_FORMATION_TEMPLATE]", "Path to Cloud Formation template") do |o|
+            @options[:template] = o
+          end
+
           opts.on("-n", "--name [NAME]", "Name of AMI") do |o|
             @options[:name] = o
           end
@@ -60,8 +68,9 @@ module Roark
             @options[:region] = o
           end
 
-          opts.on("-t", "--template [TEMPLATE]", "Path to Cloud Formation template") do |o|
-            @options[:template] = o
+          opts.on("-t", "--tag [TAG]", "AMI tag name and it's value separated by '='. Can be specified multiple times.") do |o|
+            data = o.split('=')
+            @options[:tags].merge!({ data.first => data[1] })
           end
 
           opts.on("--aws-access-key [KEY]", "AWS Access Key") do |o|
