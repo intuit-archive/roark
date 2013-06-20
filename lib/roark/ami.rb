@@ -110,6 +110,15 @@ module Roark
       end
     end
 
+    def add_tags(tags)
+      begin
+        tag tags
+      rescue AWS::Errors::Base => e
+        return Response.new :code => 1, :message => e.message
+      end
+      Response.new :code => 0, :message => 'Tagging completed successfully.'
+    end
+
     def authorize_account_ids(account_ids)
       begin
         authorize account_ids
@@ -149,6 +158,10 @@ module Roark
       ec2_ami_authorizations.add :ami_id => @ami_id, :account_ids => account_ids
     end
 
+    def tag(tags)
+      ec2_ami_tags.add :ami_id => @ami_id, :tags => tags
+    end
+
     def instance
       @instance ||= Instance.new :aws => @aws, :name => instance_name
     end
@@ -159,6 +172,10 @@ module Roark
 
     def ec2_ami_authorizations
       @ec2_ami_authorizations ||= Roark::Aws::Ec2::AmiAuthorizations.new @aws
+    end
+
+    def ec2_ami_tags
+      @ec2_ami_tags ||= Roark::Aws::Ec2::AmiTags.new @aws
     end
 
     def ec2_destroy_ami
