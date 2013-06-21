@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["brett@weav.net"]
   spec.description   = %q{Library and CLI to build AMIs from Instances created via Cloud Formation.}
   spec.summary       = %q{Howard Roark, master architect and builder of AMIs.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/intuit/roark"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -22,5 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
 
-  spec.add_runtime_dependency "aws-sdk", "1.11.2"
+  spec.add_runtime_dependency "aws-sdk", "~> 1.11.2"
 end
