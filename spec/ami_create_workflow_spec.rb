@@ -37,4 +37,7 @@ describe Roark::AmiCreateWorkflow do
                                                     :template   => 'template').and_return @response_stub
     expect(@ami_create_workflow.execute.success?).to be_false
   end
+
+  it "should set tags and accounts to empty by default"
+
 end

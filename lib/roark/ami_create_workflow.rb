@@ -2,9 +2,9 @@ module Roark
   class AmiCreateWorkflow
 
     def initialize(args)
-      @account_ids = args[:account_ids]
+      @account_ids = args[:account_ids] || []
       @ami         = args[:ami]
-      @tags        = args[:tags]
+      @tags        = args[:tags] || {}
       @parameters  = args[:parameters]
       @template    = args[:template]
     end
