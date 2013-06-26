@@ -8,8 +8,10 @@ module Roark
       @ami_id = args[:ami_id]
       @name   = args[:name]
 
-      @region   = @aws.region
-      @logger   = Roark.logger
+      Roark.logger args[:logger] if args[:logger]
+
+      @region = @aws.region
+      @logger = Roark.logger
     end
 
     def create_instance(args)

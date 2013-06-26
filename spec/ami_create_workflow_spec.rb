@@ -38,6 +38,4 @@ describe Roark::AmiCreateWorkflow do
     expect(@ami_create_workflow.execute.success?).to be_false
   end
 
-  it "should set tags and accounts to empty by default"
-
 end
