@@ -7,7 +7,6 @@ module Roark
       @tags        = args[:tags]
       @parameters  = args[:parameters]
       @template    = args[:template]
-      @logger      = Roark.logger
     end
 
     def execute
