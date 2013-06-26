@@ -110,7 +110,7 @@ module Roark
       end
     end
 
-    def add_tags(tags)
+    def add_tags(tags={})
       begin
         tag tags
       rescue AWS::Errors::Base => e
@@ -119,7 +119,7 @@ module Roark
       Response.new :code => 0, :message => 'Tagging completed successfully.'
     end
 
-    def authorize_account_ids(account_ids)
+    def authorize_account_ids(account_ids=[])
       begin
         authorize account_ids
       rescue AWS::Errors::Base => e
