@@ -2,12 +2,11 @@ module Roark
   class AmiCreateWorkflow
 
     def initialize(args)
-      @account_ids = args[:account_ids]
+      @account_ids = Array(args[:account_ids])
       @ami         = args[:ami]
-      @tags        = args[:tags]
+      @tags        = args.fetch :tags, {}
       @parameters  = args[:parameters]
       @template    = args[:template]
-      @logger      = Roark.logger
     end
 
     def execute

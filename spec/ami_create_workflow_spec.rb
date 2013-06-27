@@ -6,7 +6,7 @@ describe Roark::AmiCreateWorkflow do
     @response_stub = mock 'response'
     Roark.logger logger_stub
     Roark.logger.stub :info => true
-    @ami_mock            = mock 'ami mock'
+    @ami_mock    = mock 'ami mock'
     @account_ids = ['123456789012', '123456789013']
     @tags        = { 'tag1' => 'val1', 'tag2' => 'val2' }
     @ami_create_workflow = Roark::AmiCreateWorkflow.new :account_ids => @account_ids,
@@ -37,4 +37,13 @@ describe Roark::AmiCreateWorkflow do
                                                     :template   => 'template').and_return @response_stub
     expect(@ami_create_workflow.execute.success?).to be_false
   end
+
+  it "should set the tags and accounts to empty if not set" do
+    @ami_create_workflow = Roark::AmiCreateWorkflow.new :ami        => @ami_mock,
+                                                        :parameters => { 'key' => 'val' },
+                                                        :template   => 'template'
+    expect(@ami_create_workflow.instance_variable_get(:@tags)).to eq({})
+    expect(@ami_create_workflow.instance_variable_get(:@account_ids)).to eq([])
+  end
+
 end
