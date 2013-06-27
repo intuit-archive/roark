@@ -15,23 +15,23 @@ module Roark
       def create
         option_parser.parse!
 
-        validate_required_options [:name, :template]
+        validate_required_options [:name, :cloud_formation_template]
 
         validate_account_ids_format
 
-        unless File.exists? @options[:template]
-          @logger.error "Template #{@options[:template]} does not exist."
+        unless File.exists? @options[:cloud_formation_template]
+          @logger.error "Template #{@options[:cloud_formation_template]} does not exist."
           exit 1
         end
 
-        template = File.read @options[:template]
+        template = File.read @options[:cloud_formation_template]
 
         ami = Roark::Ami.new :aws => aws, :name => @options[:name]
 
         ami_create_workflow = Roark::AmiCreateWorkflow.new :account_ids => @options[:account_ids],
                                                            :ami         => ami,
                                                            :tags        => @options[:tags],
-                                                           :template    => template,
+                                                           :template    => cloud_formation_template,
                                                            :parameters  => @options[:parameters]
         response = ami_create_workflow.execute
 
@@ -52,7 +52,7 @@ module Roark
           end
 
           opts.on("-c", "--cloud_formation_template [CLOUD_FORMATION_TEMPLATE]", "Path to Cloud Formation template") do |o|
-            @options[:template] = o
+            @options[:cloud_formation_template] = o
           end
 
           opts.on("-n", "--name [NAME]", "Name of AMI") do |o|
