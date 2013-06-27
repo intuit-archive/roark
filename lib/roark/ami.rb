@@ -8,8 +8,6 @@ module Roark
       @ami_id = args[:ami_id]
       @name   = args[:name]
 
-      Roark.logger args[:logger] if args[:logger]
-
       @region = @aws.region
       @logger = Roark.logger
     end
