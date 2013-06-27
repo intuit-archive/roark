@@ -1,4 +1,4 @@
-## HEAD:
+## 0.2.1 (06/27/2013):
 
 * Internal Updates.
 * Exposing logging from AMI class.
