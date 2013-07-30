@@ -24,7 +24,7 @@ module Roark
           exit 1
         end
 
-        template = File.read @options[:cloud_formation_template]
+        cloud_formation_template = File.read @options[:cloud_formation_template]
 
         ami = Roark::Ami.new :aws => aws, :name => @options[:name]
 
