@@ -1,5 +1,11 @@
 [![Build Status](https://secure.travis-ci.org/intuit/roark.png)](http://travis-ci.org/intuit/roark)
 
+**Roark has been deprecated. We will not be merging any pull requests or providing updates.**
+
+**We recommend you leverage [Packer](http://packer.io) to build AMIs**
+
+-----
+
 # Roark
 
 Howard Roark, master architect and builder of AMIs.
