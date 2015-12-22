@@ -6,8 +6,8 @@ require 'roark/version'
 Gem::Specification.new do |spec|
   spec.name          = "roark"
   spec.version       = Roark::VERSION
-  spec.authors       = ["Brett Weaver"]
-  spec.email         = ["brett@weav.net"]
+  spec.authors       = ["Intuit Open Source"]
+  spec.email         = ["CTO-DevOpenSource@intuit.com]
   spec.description   = %q{Library and CLI to build AMIs from Instances created via Cloud Formation.}
   spec.summary       = %q{Howard Roark, master architect and builder of AMIs.}
   spec.homepage      = "https://github.com/intuit/roark"
